@@ -72,7 +72,7 @@ Built with **React (TypeScript)**, **FastAPI (Python)**, **Supabase**, and an **
 
 ### 1. Clone Repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/donor-connect-platform.git
+git clone https://github.com/YOUR_USERNAME/reach-donor-connect-platform.git
 cd donor-connect-platform
 ```
 
