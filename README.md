@@ -94,8 +94,10 @@ npm run dev
 ```
 Frontend runs at http://localhost:3000
 
-3000
-
 ### 4. 🔑 Environment Variables
 
-Create .env.local inside frontend/:
+Create .env inside frontend/:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
