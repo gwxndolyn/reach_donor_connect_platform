@@ -1,12 +1,34 @@
-import React from 'react';
+"use client";
 
-const Homepage = () => {
+import React from "react";
+import {
+  AvatarCreator,
+  AvatarCreatorConfig,
+  AvatarExportedEvent,
+} from "@readyplayerme/react-avatar-creator";
+
+const config: AvatarCreatorConfig = {
+  clearCache: true,
+  bodyType: "fullbody",
+  quickStart: false,
+  language: "en",
+};
+
+const style = { width: "100%", height: "100vh", border: "none" };
+
+export default function HomePage() {
+  const handleOnAvatarExported = (event: AvatarExportedEvent) => {
+    console.log(`Avatar URL is: ${event.data.url}`);
+  };
+
   return (
-    <div>
-      <h1>Welcome to the Homepage</h1>
-      <p>This is the main page of our application.</p>
-    </div>
+    <>
+      <AvatarCreator
+        subdomain="reachdonorconnect"
+        config={config}
+        style={style}
+        onAvatarExported={handleOnAvatarExported}
+      />
+    </>
   );
 }
-
-export default Homepage;
