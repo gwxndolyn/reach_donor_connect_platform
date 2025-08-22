@@ -23,7 +23,7 @@ export default async function PrivatePage() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 text-center">
           <p className="text-lg font-medium text-gray-800">
             Welcome to the dashboard,{" "}
