@@ -9,6 +9,7 @@ frontend/venv/
 # --- Backend ---
 backend/venv/
 backend/__pycache__/
+backend/app/__pycache__/
 backend/*.pyc
 backend/.env
 
@@ -16,3 +17,4 @@ backend/.env
 .env
 *.env
 .DS_Store
+.env.local

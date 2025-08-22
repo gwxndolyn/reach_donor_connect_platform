@@ -16,14 +16,19 @@ const config: AvatarCreatorConfig = {
 
 const style = { width: "100%", height: "100vh", border: "none" };
 
-export default function HomePage() {
+export default function AvatarCreatorComponent() {
   const handleOnAvatarExported = (event: AvatarExportedEvent) => {
     console.log(`Avatar URL is: ${event.data.url}`);
   };
 
   return (
     <>
-      <p>Hi this is the home page</p>
+      <AvatarCreator
+        subdomain="reachdonorconnect"
+        config={config}
+        style={style}
+        onAvatarExported={handleOnAvatarExported}
+      />
     </>
   );
 }
