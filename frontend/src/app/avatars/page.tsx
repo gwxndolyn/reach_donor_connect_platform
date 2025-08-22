@@ -1,9 +1,7 @@
-// INCOMPLETE, JUST TESTING
-
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
-import AvatarCreatorComponent from "./components/AvatarCreator";
+import { createAnonymousUser, fetchAllTemplates } from "./actions";
 
 export default async function AvatarPage() {
   const supabase = await createClient();
@@ -20,13 +18,16 @@ export default async function AvatarPage() {
     .single();
 
   if (DonorError || !DonorData.onboarded) {
-    console.log(DonorData);
     redirect("/signup/onboarding");
   }
 
+  const avatarToken = await createAnonymousUser();
+
+  const avatarTemplates = await fetchAllTemplates(avatarToken);
+
   return (
     <>
-      <AvatarCreatorComponent />
+      <pre>{JSON.stringify(avatarTemplates, null, 2)}</pre>
     </>
   );
 }

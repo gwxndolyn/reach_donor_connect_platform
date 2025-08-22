@@ -23,12 +23,7 @@ export default function HomePage() {
 
   return (
     <>
-      <AvatarCreator
-        subdomain="reachdonorconnect"
-        config={config}
-        style={style}
-        onAvatarExported={handleOnAvatarExported}
-      />
+      <p>Hi this is the home page</p>
     </>
   );
 }
