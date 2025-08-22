@@ -1,7 +1,19 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
-import { createAnonymousUser, fetchAllTemplates } from "./actions";
+import {
+  createAnonymousUser,
+  fetchAllTemplates,
+  saveTokenToDB,
+} from "./actions";
+import TemplateList from "./components/TemplateList";
+
+type TemplateItem = {
+  imageUrl: string;
+  gender: "female" | "male" | "unisex" | string;
+  usageType: "randomize" | "default" | string;
+  id: string;
+};
 
 export default async function AvatarPage() {
   const supabase = await createClient();
@@ -23,11 +35,9 @@ export default async function AvatarPage() {
 
   const avatarToken = await createAnonymousUser();
 
-  const avatarTemplates = await fetchAllTemplates(avatarToken);
+  await saveTokenToDB(avatarToken, AuthData.user.id);
 
-  return (
-    <>
-      <pre>{JSON.stringify(avatarTemplates, null, 2)}</pre>
-    </>
-  );
+  const avatarTemplates: TemplateItem[] = await fetchAllTemplates(avatarToken);
+
+  return <TemplateList avatarTemplates={avatarTemplates} />;
 }

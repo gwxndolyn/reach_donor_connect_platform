@@ -53,6 +53,24 @@ export async function assignTemplateToUser(token: string, templateId: string) {
   return json.data;
 }
 
+export async function saveTokenToDB(token: string, userId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("Donors")
+    .update({ rpm_token: token })
+    .eq("auth_uid", userId)
+    .select("*");
+
+  if (error) throw error;
+
+  if (!data || data.length === 0) {
+    throw new Error("No matching donor row. Check auth_uid and RLS.");
+  }
+
+  return data[0];
+}
+
 export async function saveAvatarToRPM(token: string, avatarId: string) {
   const response = await fetch(
     `https://api.readyplayer.me/v2/avatars/${avatarId}`,

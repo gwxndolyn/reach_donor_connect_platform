@@ -33,7 +33,4 @@ export async function createDonor(formData: FormData) {
     .select();
 
   redirect("/dashboard");
-
-  if (donorError) return { ok: false, error: donorError.message };
-  return { ok: true, donor: donorData };
 }
