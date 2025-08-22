@@ -18,7 +18,6 @@ export default async function PrivatePage() {
     .single();
 
   if (DonorError || !DonorData.onboarded) {
-    console.log(DonorData);
     redirect("/signup/onboarding");
   }
 
