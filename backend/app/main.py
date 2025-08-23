@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pytesseract
 from PIL import Image
 
-from app.routes import donor, notes
+from app.routes import donor, notes, student
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ app.add_middleware(
 
 app.include_router(donor.router)
 app.include_router(notes.router)
+app.include_router(student.router)
 
 @app.get("/")
 def root():
