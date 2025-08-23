@@ -50,11 +50,11 @@ export default function UploadNotes() {
     setUploading(false);
 
     if (result.ok) {
-      setMessage("✅ Notes uploaded successfully!");
+      setMessage("✅ Note uploaded successfully!");
       setFile(null);
       setSelectedStudent("");
     } else {
-      setMessage(`❌ Upload failed: ${result.error || "Unknown error"}`);
+      setMessage(`❌ Unexpected error, please retry upload`);
     }
   };
 
