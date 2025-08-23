@@ -1,3 +1,8 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
 # --- Frontend ---
 frontend/node_modules/
 frontend/.next/
@@ -14,6 +19,8 @@ backend/*.pyc
 backend/.env
 backend/app/routes/__pycache__/
 backend/app/services/__pycache__/
+backend/app/models/__pycache__/
+backend/app/models/__pycache__/schemas.cpython-311.pyc
 
 # --- General ---
 .env
