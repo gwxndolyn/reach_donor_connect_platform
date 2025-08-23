@@ -153,7 +153,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Must be at least 8 characters with letters and numbers
+                  Password must be at least 6 characters long
                   </p>
                 </div>
 
