@@ -6,26 +6,29 @@ from google import genai
 
 client = genai.Client()
 
-def extract_text_from_image_uri(file_uri: str) -> str:
+def extract_text_from_image_url(file_url: str) -> str:
     """
     Extract text from an image using Google Gemini (gemini-2.5-flash model)
     Args:
-        file_uri: Local path or remote URL to the image
+        file_url: Local path or remote URL to the image
     Returns:
         Extracted text as a string
+    Raises:
+        ValueError: if the image cannot be processed or Gemini fails
     """
     try:
         # Open image from URL or local file
-        if file_uri.startswith("http"):
-            response = requests.get(file_uri)
+        if file_url.startswith("http"):
+            response = requests.get(file_url)
+            response.raise_for_status()
             image = Image.open(BytesIO(response.content))
         else:
-            image = Image.open(file_uri)
+            image = Image.open(file_url)
 
-        prompt = f"""
+        prompt = """
         You are an OCR assistant. Extract **all handwritten text** from the image below.
 
-        - Return the extracted text as a **single paragraph**. 
+        - Return the extracted text as a **single paragraph**.
         - Do **not** include line breaks, summaries, or any omitted content.
         - Do **not** correct spelling, grammar, or any mistakes in the original text.
         - Do **not** add titles, commentary, or explanations.
@@ -38,8 +41,14 @@ def extract_text_from_image_uri(file_uri: str) -> str:
             contents=[image, prompt]
         )
 
+        if not gemini_response or not getattr(gemini_response, "text", None):
+            raise ValueError("No text extracted from the image.")
+
         return gemini_response.text
 
+    except requests.RequestException as req_err:
+        raise ValueError(f"Failed to fetch image from URL: {req_err}")
+    except IOError as img_err:
+        raise ValueError(f"Invalid image format or corrupted file: {img_err}")
     except Exception as e:
-        print(f"Gemini OCR Error: {e}")
-        return "Error: Unable to extract text from image."
+        raise ValueError(f"Gemini OCR Error: {e}")
