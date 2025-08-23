@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-type Region = "islands" | "north" | "kwai-tsing" | "sai-kung" | "sha-tin" | "tai-po" | "tsuen-wan" | "tuen-mun" | "yuen-long" | "kowloon-city" | "kwun-tong" | "sham-shui-po" | "wong-tai-sin" | "yau-tsim-mong" | "central-western" | "eastern" | "southern" | "wan-chai" | "Wan Chai 灣仔";
+type Region = "islands" | "north" | "kwai-tsing" | "sai-kung" | "sha-tin" | "tai-po" | "tsuen-wan" | "tuen-mun" | "yuen-long" | "kowloon-city" | "kwun-tong" | "sham-shui-po" | "wong-tai-sin" | "yau-tsim-mong" | "central-western" | "eastern" | "southern" | "wan-chai";
 
 export async function createDonor(formData: FormData) {
   const supabase = await createClient();
@@ -20,7 +20,7 @@ export async function createDonor(formData: FormData) {
     .toLowerCase() as Region;
 
   if (!name) return { ok: false, error: "Name is required." };
-  if (!["islands", "north", "kwai-tsing", "sai-kung", "sha-tin", "tai-po", "tsuen-wan", "tuen-mun", "yuen-long", "kowloon-city", "kwun-tong", "sham-shui-po", "wong-tai-sin", "yau-tsim-mong", "central-western", "eastern", "southern", "wan-chai", "Wan Chai 灣仔"].includes(region)) {
+  if (!["islands", "north", "kwai-tsing", "sai-kung", "sha-tin", "tai-po", "tsuen-wan", "tuen-mun", "yuen-long", "kowloon-city", "kwun-tong", "sham-shui-po", "wong-tai-sin", "yau-tsim-mong", "central-western", "eastern", "southern", "wan-chai"].includes(region)) {
     return { ok: false, error: "Invalid region." };
   }
 
