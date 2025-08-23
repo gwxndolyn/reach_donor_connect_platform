@@ -19,12 +19,14 @@ import {
 
 function Brand() {
   return (
-    <div className="flex items-center space-x-2">
-      <Heart className="h-6 w-6 text-red-500" />
-      <span className="text-xl font-bold text-gray-900">
-        <Link href="/home">DonorConnect</Link>
-      </span>
-    </div>
+    <Link
+        href="/home"
+        className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
+        aria-label="Go to Homepage"
+      >
+        <Heart className="h-6 w-6 text-red-500" />
+        <span className="text-xl font-bold text-gray-900">DonorConnect</span>
+      </Link>
   );
 }
 

@@ -12,7 +12,7 @@ export default async function PrivatePage() {
   }
 
   const { data: DonorData, error: DonorError } = await supabase
-    .from("Donors")
+    .from("donors")
     .select("*")
     .eq("auth_uid", AuthData.user.id)
     .single();
