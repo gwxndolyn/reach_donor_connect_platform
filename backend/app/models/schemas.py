@@ -8,7 +8,6 @@ class JournalSubmission(BaseModel):
 
 
 class LearningReportResponse(BaseModel):
-    student_id: str
     updated_report: str
     progress_update: str
     scores: Dict[str, int]
