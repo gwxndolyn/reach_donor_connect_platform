@@ -1,12 +1,16 @@
 from app.services.supabase_service import DBServiceClass
 from app.services.llm_service import LLMClass
 from app.models.schemas import LearningReportResponse
+from app.services.notification_service import NotificationService
+from app.services.linking_service import LinkingServiceClass
 
 
 class LearningReportClass:
     def __init__(self):
         self.db = DBServiceClass()
         self.llm = LLMClass()
+        self.notifier = NotificationService()
+        self.linking_service = LinkingServiceClass()
 
     async def generate_learning_report(self, student_id: str, new_journal: str):
         existing_data = await self.db.get_data_by_student(student_id)
@@ -23,7 +27,6 @@ class LearningReportClass:
         )
 
         return LearningReportResponse(
-            student_id=student_id,
             updated_report=report.get("summary", ""),
             progress_update=report.get("progress_update", ""),
             scores=report.get("scores", {}),
