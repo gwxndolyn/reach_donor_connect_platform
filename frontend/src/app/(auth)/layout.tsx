@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { StaffNavbar } from "@/components/staff-navbar";
-import { DonorNavbar } from "@/components/donor-navbar";
+import { NavigationMenuDemo } from "@/components/navbar";
 
 export default async function AuthLayout({
   children,
@@ -30,7 +30,7 @@ export default async function AuthLayout({
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4">
-          {isStaff ? <StaffNavbar /> : <DonorNavbar />}
+          {isStaff ? <StaffNavbar /> : <NavigationMenuDemo />}
         </div>
       </nav>
 
