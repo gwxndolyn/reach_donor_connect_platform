@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ArrowRight, Mail, Lock } from "lucide-react";
+import { Heart, ArrowRight, Mail, Lock, AlertCircle } from "lucide-react";
 import { login } from "./actions";
 
-export default function LoginPage() {
+export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
+  const error = searchParams?.error;
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
       <div className="min-h-screen flex">
@@ -26,6 +27,12 @@ export default function LoginPage() {
 
             {/* Login Form */}
             <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+              {error && (
+                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                </div>
+              )}
               <form className="space-y-6">
                 <div>
                   <label

@@ -1,9 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ArrowRight, Mail, Lock, User, Shield, Check } from "lucide-react";
+import { Heart, ArrowRight, Mail, Lock, User, Shield, Check, AlertCircle, CheckCircle } from "lucide-react";
 import { signup } from "./actions";
 
-export default function SignupPage() {
+export default function SignupPage({ searchParams }: { searchParams: { error?: string; success?: string; email?: string } }) {
+  const error = searchParams?.error;
+  const success = searchParams?.success;
+  const email = searchParams?.email;
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
       <div className="min-h-screen flex">
@@ -79,7 +82,38 @@ export default function SignupPage() {
 
             {/* Signup Form */}
             <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-              <form className="space-y-6">
+              {error && (
+                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                </div>
+              )}
+              
+              {success && email && (
+                <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                    <h3 className="text-lg font-semibold text-green-900">Check Your Email!</h3>
+                  </div>
+                  <p className="text-green-700 text-sm mb-3">
+                    We've sent a confirmation email to <strong>{email}</strong>
+                  </p>
+                  <p className="text-green-600 text-sm">
+                    Please click the link in the email to verify your account and complete your signup.
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-green-200">
+                    <Link 
+                      href="/login"
+                      className="text-green-700 hover:text-green-800 font-medium text-sm underline"
+                    >
+                      Already confirmed? Sign in here →
+                    </Link>
+                  </div>
+                </div>
+              )}
+              
+              {!success && (
+                <form className="space-y-6">
                 <div>
                   <label
                     htmlFor="email"
@@ -142,14 +176,15 @@ export default function SignupPage() {
                   </label>
                 </div>
 
-                <button
-                  formAction={signup}
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-                >
-                  Create Account
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </form>
+                  <button
+                    formAction={signup}
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                  >
+                    Create Account
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </form>
+              )}
 
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
