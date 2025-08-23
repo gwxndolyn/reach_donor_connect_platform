@@ -4,6 +4,8 @@ from app.models.schemas import JournalData
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+def get_supabase_client():
+    return supabase
 
 class DBServiceClass:
     def test_connection():

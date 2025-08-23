@@ -1,145 +1,142 @@
 "use client";
 
-import { useState } from "react";
-import { uploadNotes } from "./actions";
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { uploadNotes, getStudents } from "./actions";
 
-export default function UploadNotesPage() {
-  const [files, setFiles] = useState<File[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+export default function UploadNotes() {
+  const [students, setStudents] = useState<{ id: string; name: string }[]>([]);
+  const [loadingStudents, setLoadingStudents] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  // Add files (cumulative, max 10)
-  const handleFiles = (selectedFiles: FileList | File[]) => {
-    const newFiles = Array.from(selectedFiles);
-    const combinedFiles = [...files, ...newFiles].slice(0, 10); // limit 10
-    setFiles(combinedFiles);
-    setMessage(null); // clear previous messages
-  };
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
-  // Remove a file by index
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Handle upload submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Fetch students on mount
+  useEffect(() => {
+    async function fetchStudents() {
+      const { data, error } = await getStudents();
+      if (error) {
+        setMessage(`Error: ${error}`);
+      } else {
+        setStudents(data || []);
+      }
+      setLoadingStudents(false);
+    }
+    fetchStudents();
+  }, []);
+
+  // Handle upload
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (files.length === 0) {
-      setMessage("Please select at least one image.");
+    setMessage("");
+
+    if (!selectedStudent || !file) {
+      setMessage("Please select a student and choose a file.");
       return;
     }
 
-    setLoading(true);
-    setMessage(null);
+    setUploading(true);
 
     const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
+    formData.append("student_id", selectedStudent);
+    formData.append("file", file);
 
     const result = await uploadNotes(formData);
-    setLoading(false);
+    setUploading(false);
 
     if (result.ok) {
-      setMessage("✅ Upload successful!");
-      setFiles([]);
+      setMessage("✅ Note uploaded successfully!");
+      setFile(null);
+      setSelectedStudent("");
     } else {
-      setMessage(`❌ Upload failed: ${result.error}`);
+      setMessage(`❌ Unexpected error, please retry upload`);
     }
   };
 
-  // Drag-and-drop handlers
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!e.dataTransfer.files) return;
-    handleFiles(e.dataTransfer.files);
-  };
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Upload Notes
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Drop zone */}
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className="border-2 border-dashed border-gray-300 rounded-xl h-64 flex flex-col p-4 cursor-pointer hover:border-blue-400 transition-colors"
-            onClick={() => document.getElementById("fileInput")?.click()}
-          >
-            <div className="flex flex-col justify-center items-center flex-1">
-              <p className="text-gray-500 mb-1">Click or drag images here</p>
-              <p className="text-gray-400 text-sm mb-4">Up to 10 images</p>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
+      <Card className="w-full max-w-lg shadow-lg border rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-center">
+            Upload Notes
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-6" onSubmit={handleUpload}>
+            {/* Student Selector */}
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Select Student
+              </label>
+              <select
+                className="w-full border rounded-md p-2 text-sm"
+                value={selectedStudent}
+                onChange={(e) => setSelectedStudent(e.target.value)}
+                disabled={loadingStudents}
+              >
+                <option value="">
+                  {loadingStudents ? "Loading students..." : "Choose a student"}
+                </option>
+                {students.map((student) => (
+                  <option key={student.student_id} value={student.student_id}>
+                    {student.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* File list inside drop zone */}
-            {files.length > 0 && (
-              <div className="overflow-y-auto flex-grow w-full">
-                {files.map((file, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2 bg-gray-100 px-2 py-1 rounded-xl mb-1"
-                  >
-                    {/* Image preview */}
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      className="h-10 w-10 object-cover rounded"
-                    />
-                    {/* File name */}
-                    <span className="text-sm truncate flex-1">{file.name}</span>
-                    {/* Remove button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent drop zone click
-                        removeFile(idx);
-                      }}
-                      className="text-red-600 font-bold hover:text-red-800"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            {/* File Upload */}
+            <div className="flex items-center space-x-3">
+              <Button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-2"
+              >
+                {file ? "Change File" : "Upload File"}
+              </Button>
+              <span className="text-sm text-gray-700">
+                {file ? file.name : "No file selected"}
+              </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".png,.jpg,.jpeg,.pdf"
+                className="hidden"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+            </div>
 
-          {/* Hidden file input */}
-          <input
-            id="fileInput"
-            type="file"
-            multiple
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => e.target.files && handleFiles(e.target.files)}
-          />
-
-          {/* Upload button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? "Uploading..." : "Upload Notes"}
-          </button>
-
-          {/* Status message */}
-          {message && (
-            <p
-              className={`text-center text-sm mt-2 ${
-                message.startsWith("✅") ? "text-green-600" : "text-red-600"
-              }`}
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={uploading || loadingStudents}
             >
-              {message}
-            </p>
-          )}
-        </form>
-      </div>
+              {uploading ? "Uploading..." : "Upload Notes"}
+            </Button>
+
+            {/* Status Message */}
+            {message && (
+              <p
+                className={`text-center mt-4 text-sm font-medium ${
+                  message.startsWith("✅")
+                    ? "text-green-600"
+                    : message.startsWith("❌")
+                    ? "text-red-600"
+                    : "text-gray-600"
+                }`}
+              >
+                {message}
+              </p>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
