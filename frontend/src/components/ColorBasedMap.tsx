@@ -12,116 +12,117 @@ interface RegionData {
 
 interface ColorBasedMapProps {
   className?: string;
+  regionCounts: Record<string, number>;
 }
 
 // Map RGB colors from the image to districts
 const colorToRegion: Record<string, RegionData> = {
   // Based on the colors visible in the uploaded image
-  "115,142,154": { // Tuen Mun area 1
+  "115,142,154": { // Tuen Mun area
     id: 'tuen-mun',
-    name: 'Tuen Mun',
+    name: 'Tuen Mun 屯門',
     description: 'Northwestern New Territories district known for its new town development',
     color: 'rgb(114,142,154)'
   },
-  "187,214,225": { // Yuen Long area  1
+  "187,214,225": { // Yuen Long area
     id: 'yuen-long',
-    name: 'Yuen Long',
+    name: 'Yuen Long 元朗',
     description: 'Agricultural heartland of Hong Kong with traditional villages',
     color: 'rgb(187,214,225)'
   },
-  "172,187,162": { // North District 1
+  "172,187,162": { // North District
     id: 'north',
-    name: 'North District', 
+    name: 'North 北', 
     description: 'Bordering Shenzhen with scenic countryside and border crossings',
     color: 'rgb(172,188,162)'
   },
-  "121,157,99": { // Tai Po 1
+  "121,157,99": { // Tai Po 
     id: 'tai-po',
-    name: 'Tai Po',
+    name: 'Tai Po 大埔',
     description: 'Historic market town surrounded by country parks',
     color: 'rgb(121,157,99)'
   },
-  "74,100,65": { // Sha Tin 1
+  "74,100,65": { // Sha Tin
     id: 'sha-tin', 
-    name: 'Sha Tin',
+    name: 'Sha Tin 沙田',
     description: 'Major new town with racecourse and university',
     color: 'rgb(73,100,65)'
   },
-  "204,161,83": { // Sai Kung 1
+  "204,161,83": { // Sai Kung
     id: 'sai-kung',
-    name: 'Sai Kung',
+    name: 'Sai Kung 西貢',
     description: 'Scenic peninsula known for seafood and outdoor activities', 
     color: 'rgb(204,161,83)'
   },
-  "143,161,168": { // Tsuen Wan 1
+  "143,161,168": { // Tsuen Wan
     id: 'tsuen-wan',
-    name: 'Tsuen Wan',
+    name: 'Tsuen Wan 荃灣',
     description: 'Industrial new town in western New Territories',
     color: 'rgb(143,161,168)'
   },
-  "123,113,144": { // Kwai Tsing 1
+  "123,113,144": { // Kwai Tsing
     id: 'kwai-tsing', 
-    name: 'Kwai Tsing',
+    name: 'Kwai Tsing 葵青',
     description: 'Major container port and industrial area',
     color: 'rgb(123,113,144)'
   },
-  "231,2,3": { // Central & Western 1
+  "231,2,3": { // Central & Western
     id: 'central-western',
-    name: 'Central & Western', 
+    name: 'Central and Western 中西', 
     description: 'Financial heart of Hong Kong with iconic skyline',
     color: 'rgb(231,5,5)'
   },
-  "165,37,1": { // Wan Chai 1
+  "165,37,1": { // Wan Chai
     id: 'wan-chai',
-    name: 'Wan Chai',
+    name: 'Wan Chai 灣仔',
     description: 'Vibrant district mixing business, culture and nightlife',
     color: 'rgb(165,38,5)'
   },
-  "255,178,155": { // Eastern District 1
+  "255,178,155": { // Eastern District
     id: 'eastern',
-    name: 'Eastern District',
+    name: 'Eastern 東',
     description: 'Diverse residential and commercial areas', 
     color: 'rgb(255,178,155)'
   },
-  "221,205,123": { // Islands District (Lantau) 1
+  "221,205,123": { // Islands District (Lantau)
     id: 'islands',
-    name: 'Islands District',
+    name: 'Islands 離島',
     description: 'Lantau Island and other outlying islands',
     color: 'rgb(220,206,124)'
   },
-  "167,130,105": { // Yau Tsim Mong 1
+  "167,130,105": { // Yau Tsim Mong
     id: 'yau-tsim-mong',
-    name: 'Yau Tsim Mong', 
+    name: 'Yau Tsim Mong 油尖旺', 
     description: 'Dense urban area including Tsim Sha Tsui tourist district',
     color: 'rgb(167,130,104)'
   },
-  "187,177,188": { // Sham Shui Po 1
+  "187,177,188": { // Sham Shui Po
     id: 'sham-shui-po',
-    name: 'Sham Shui Po',
+    name: 'Sham Shui Po 深水埗',
     description: 'Historic working-class area with street markets',
     color: 'rgb(187,177,188)'  
   },
-  "201,156,123": { // Kowloon City 1
+  "201,156,123": { // Kowloon City 
     id: 'kowloon-city',
-    name: 'Kowloon City',
+    name: 'Kowloon City 九龍城',
     description: 'Residential area famous for its former walled city',
     color: 'rgb(201,156,123)'
   },
-  "220,185,128": { // Wong Tai Sin  1
+  "220,185,128": { // Wong Tai Sin
     id: 'wong-tai-sin',
-    name: 'Wong Tai Sin',
+    name: 'Wong Tai Sin 黃大仙',
     description: 'Public housing estates and famous temple',
     color: 'rgb(220,185,127)'
   },
-  "198,189,134": { // Kwun Tong 1
+  "198,189,134": { // Kwun Tong
     id: 'kwun-tong', 
-    name: 'Kwun Tong',
+    name: 'Kwun Tong 觀塘',
     description: 'Industrial and residential district undergoing urban renewal',
     color: 'rgb(197,189,134)'
   },
-  "255,110,98": { // Southern District 1
+  "255,110,98": { // Southern District
     id: 'southern',
-    name: 'Southern District',
+    name: 'Southern 南',
     description: 'Scenic southern peninsula with beaches and country parks',
     color: 'rgb(255,110,97)'
   }
@@ -154,7 +155,7 @@ const findRegionByColor = (r: number, g: number, b: number): RegionData | null =
   return null;
 };
 
-export const ColorBasedMap = ({ className = "" }: ColorBasedMapProps) => {
+export const ColorBasedMap = ({ className = "", regionCounts }: ColorBasedMapProps) => {
   const [hoveredRegion, setHoveredRegion] = useState<RegionData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -273,7 +274,9 @@ export const ColorBasedMap = ({ className = "" }: ColorBasedMapProps) => {
           <div className="bg-tooltip-bg text-tooltip-text px-4 py-3 rounded-lg shadow-lg border border-map-border animate-fade-in">
             <div className="text-sm font-semibold">{hoveredRegion.name}</div>
             <div className="text-xs opacity-90 mt-1 max-w-48">
-              {hoveredRegion.description}
+              {regionCounts[hoveredRegion.id] !== undefined
+                ? `Donors from this region: ${regionCounts[hoveredRegion.id]}`
+                : "Loading..."}
             </div>
           </div>
           <div className="absolute left-1/2 transform -translate-x-1/2 top-full">
