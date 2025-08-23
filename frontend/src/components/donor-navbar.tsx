@@ -26,7 +26,7 @@ function Brand() {
   );
 }
 
-export function NavigationMenuDemo() {
+export function DonorNavbar() {
   const [user, setUser] = React.useState<SupabaseUser | null>(null);
   const [loading, setLoading] = React.useState(true);
 
