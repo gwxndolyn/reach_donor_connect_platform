@@ -27,12 +27,15 @@ export async function createDonor(formData: FormData) {
   // Create a Supabase client with the existing method
 
   const { data: donorData, error: donorError } = await supabase
-    .from("Donors")
+    .from("donors")
     .insert([{ name, region, onboarded: true, auth_uid: userData.user.id }])
     .select();
 
+  if (donorError) return { ok: false, error: donorError.message };
+  
+
   redirect("/dashboard");
 
-  if (donorError) return { ok: false, error: donorError.message };
   return { ok: true, donor: donorData };
+  
 }
