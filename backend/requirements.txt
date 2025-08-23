@@ -5,3 +5,4 @@ pytesseract
 pillow
 python-multipart   # to handle file uploads
 supabase           # Python client if you want backend→Supabase connection
+dotenv
