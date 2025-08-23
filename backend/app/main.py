@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pytesseract
 from PIL import Image
 
-from app.routes import donor
+from app.routes import donor, notes
 
 app = FastAPI()
 
@@ -16,14 +16,9 @@ app.add_middleware(
 )
 
 app.include_router(donor.router)
+app.include_router(notes.router)
 
 @app.get("/")
 def root():
     return {"message": "Backend running"}
 
-
-@app.post("/ocr/")
-async def ocr(file: UploadFile):
-    image = Image.open(file.file)
-    text = pytesseract.image_to_string(image)
-    return {"extracted_text": text}
