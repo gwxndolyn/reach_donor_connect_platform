@@ -28,7 +28,7 @@ export async function createDonor(formData: FormData) {
 
   const { data: donorData, error: donorError } = await supabase
     .from("donors")
-    .insert([{ name, region, onboarded: true, auth_uid: userData.user.id }])
+    .insert([{ name, email: userData.user.email, region, onboarded: true, auth_uid: userData.user.id }])
     .select();
 
   if (donorError) return { ok: false, error: donorError.message };
