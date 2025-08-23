@@ -21,7 +21,9 @@ function Brand() {
   return (
     <div className="flex items-center space-x-2">
       <Heart className="h-6 w-6 text-red-500" />
-      <span className="text-xl font-bold text-gray-900">DonorConnect</span>
+      <span className="text-xl font-bold text-gray-900">
+        <Link href="/home">DonorConnect</Link>
+      </span>
     </div>
   );
 }
@@ -73,7 +75,7 @@ export function NavigationMenuDemo() {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/mail">Mail Inbox</Link>
+                <Link href="/home/inbox">Mail Inbox</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
