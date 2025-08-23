@@ -77,7 +77,7 @@ export function NavigationMenuDemo() {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/mail">Mail Inbox</Link>
+                <Link href="/home/inbox">Mail Inbox</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
