@@ -3,8 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-// TODO: change to something more appropriate
-type Region = "north" | "south" | "east" | "west";
+type Region = "Islands 離島" | "Kwai Tsing 葵青" | "North 北" | "Sai Kung 西貢" | "Sha Tin 沙田" | "Tai Po 大埔" | "Tsuen Wan 荃灣" | "Tuen Mun 屯門" | "Yuen Long	元朗" | "Kowloon City 九龍城" | "Kwun Tong 觀塘" | "Sham Shui Po 深水埗" | "Wong Tai Sin 黃大仙" | "Yau Tsim Mong 油尖旺" | "Central and Western 中西" | "Eastern 東" | "Southern 南" | "Wan Chai 灣仔";
 
 export async function createDonor(formData: FormData) {
   const supabase = await createClient();
