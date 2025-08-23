@@ -69,10 +69,25 @@ export default function OnboardingPage() {
               <option value="" disabled>
                 Select a region
               </option>
-              <option value="north">North</option>
-              <option value="south">South</option>
-              <option value="east">East</option>
-              <option value="west">West</option>
+              <option value="islands">Islands 離島</option>
+              <option value="kwai-tsing">Kwai Tsing 葵青</option>
+              <option value="north">North 北</option>
+              <option value="sai-kung">Sai Kung 西貢</option>
+              <option value="sha-tin">Sha Tin 沙田</option>
+              <option value="tai-po">Tai Po 大埔</option>
+              <option value="tsuen-wan">Tsuen Wan 荃灣</option>
+              <option value="tuen-mun">Tuen Mun 屯門</option>
+              <option value="yuen-long">Yuen Long 元朗</option>
+              <option value="kowloon-city">Kowloon City 九龍城</option>
+              <option value="kwun-tong">Kwun Tong 觀塘</option>
+              <option value="sham-shui-po">Sham Shui Po 深水埗</option>
+              <option value="wong-tai-sin">Wong Tai Sin 黃大仙</option>
+              <option value="yau-tsim-mong">Yau Tsim Mong 油尖旺</option>
+              <option value="central-western">Central and Western 中西</option>
+              <option value="eastern">Eastern 東</option>
+              <option value="southern">Southern 南</option>
+              <option value="wan-chai">Wan Chai 灣仔</option>
+
             </select>
           </div>
 

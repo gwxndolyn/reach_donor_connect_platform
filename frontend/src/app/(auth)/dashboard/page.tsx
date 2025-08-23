@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 import { createClient } from "@/utils/supabase/server";
-import { logout } from "./actions";
 
 export default async function PrivatePage() {
   const supabase = await createClient();
@@ -13,7 +12,7 @@ export default async function PrivatePage() {
   }
 
   const { data: DonorData, error: DonorError } = await supabase
-    .from("Donors")
+    .from("donors")
     .select("*")
     .eq("auth_uid", AuthData.user.id)
     .single();
