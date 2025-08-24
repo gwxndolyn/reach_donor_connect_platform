@@ -65,6 +65,12 @@ export default async function RootLayout({
                 <NavigationMenuDemo />
               </div>
             </nav>)}
+          {showNavbar && isStaff && (
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="container mx-auto px-4">
+                <StaffNavbar />
+              </div>
+            </nav>)}
 
           <main>{children}</main>
         </ThemeProvider>
