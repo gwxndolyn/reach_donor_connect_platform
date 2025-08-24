@@ -28,7 +28,7 @@ class LLMClass:
             "gemini-1.5-flash"
         )  # ✅ Use updated model name
 
-    def build_prompt(self, new_entry: str, previous_report: Optional[dict]) -> str:
+    def build_prompt(self, new_entry: str, previous_report: Optional[dict], journal_topic: str) -> str:
         prev = json.dumps(previous_report, indent=2) if previous_report else "None"
 
         categories = "\n".join(
@@ -68,6 +68,9 @@ class LLMClass:
         Previous Report:
         {prev}
 
+        Journal Topic:
+        {journal_topic}
+
         Output format (must follow this JSON structure):
         {json.dumps(output_format, indent=2)}
         """.strip()
@@ -75,7 +78,7 @@ class LLMClass:
     def get_updated_learning_report(
         self, new_journal: str, previous_report: Optional[dict] = None, journal_topic: str = ""
     ) -> dict:
-        prompt = self.build_prompt(new_journal, previous_report)
+        prompt = self.build_prompt(new_journal, previous_report, journal_topic)
 
         try:
             response = self.model.generate_content(prompt)
