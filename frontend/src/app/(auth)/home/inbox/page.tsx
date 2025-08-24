@@ -21,6 +21,7 @@ export default function InboxPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [notifications, setNotifications] = useState<any[]>([]);
   const [donorId, setDonorId] = useState<string | null>(null);
+  const [hasScrolledToRead, setHasScrolledToRead] = useState(false);
 
   // Initialize authentication and get donor ID
   useEffect(() => {
@@ -148,6 +149,50 @@ export default function InboxPage() {
     }
   };
 
+  const markNotificationsAsRead = async (donorId: string, studentId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/donor/mark_notifications_read/${donorId}/${studentId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Notifications marked as read");
+        // Update the children list to reflect the read status
+        setChildren(prevChildren => 
+          prevChildren.map(child => 
+            child.id.toString() === studentId 
+              ? { ...child, unread: 0 }
+              : child
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error marking notifications as read:", error);
+    }
+  };
+
+  const handleMessageScroll = async (event: any) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.target;
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+    
+    // If user has scrolled past 30% of messages and hasn't triggered this before
+    if (scrollPercentage > 0.3 && !hasScrolledToRead && selectedChild && donorId) {
+      setHasScrolledToRead(true);
+      await markNotificationsAsRead(donorId.toString(), selectedChild.id.toString());
+    }
+  };
+
+  // Reset scroll flag when changing conversations
+  useEffect(() => {
+    setHasScrolledToRead(false);
+  }, [selectedChild]);
+
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       console.log("Sending message:", newMessage);
@@ -193,6 +238,12 @@ export default function InboxPage() {
                             child.id.toString()
                           );
                           setNotifications(fetched);
+                          
+                          // Mark notifications as read when user opens the conversation
+                          await markNotificationsAsRead(
+                            donorId.toString(),
+                            child.id.toString()
+                          );
                         }
                       }}
                     >
@@ -281,7 +332,10 @@ export default function InboxPage() {
                 </div>
               </div>
 
-              <ScrollArea className="flex-1 p-4 overflow-y-auto max-h-full">
+              <ScrollArea 
+                className="flex-1 p-4 overflow-y-auto max-h-full"
+                onScrollCapture={handleMessageScroll}
+              >
                 <div className="space-y-4 pb-4">
                   {notifications.map((n, i) => (
                     <div key={i} className="space-y-4">

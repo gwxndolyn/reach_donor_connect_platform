@@ -175,3 +175,8 @@ class DBServiceClass:
             .execute()
         )
         return res.count or 0
+
+    def mark_notifications_as_read(self, donor_id: str, student_id: str):
+        """Mark all notifications as read for a donor-student pair"""
+        supabase.table("notifications").update({"is_read": True}).eq("donor_id", donor_id).eq("student_id", student_id).execute()
+        return {"success": True, "message": "Notifications marked as read"}

@@ -145,3 +145,15 @@ async def get_donor_id_by_supabase_id(supabase_id: str):
     except Exception as e:
         print(f"Error in get_donor_id_by_supabase_id: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error fetching donor: {str(e)}")
+
+
+@router.post("/mark_notifications_read/{donor_id}/{student_id}")
+async def mark_notifications_read(donor_id: str, student_id: str):
+    try:
+        result = database.mark_notifications_as_read(donor_id, student_id)
+        return {"success": True, "message": "Notifications marked as read"}
+    except Exception as e:
+        print(f"Error marking notifications as read: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error marking notifications as read: {str(e)}"
+        )
