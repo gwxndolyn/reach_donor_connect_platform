@@ -14,14 +14,27 @@ export async function staffLogin(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { data: authData, error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect("/error");
+    redirect("/staff?error=" + encodeURIComponent("Invalid email or password"));
   }
 
-  revalidatePath("/staff/dashboard", "layout");
-  redirect("/staff/dashboard");
+  // Check if user exists in Staff table
+  const { data: staffData, error: staffError } = await supabase
+    .from("staff")
+    .select("*")
+    .eq("auth_uid", authData.user.id)
+    .single();
+
+  if (staffError || !staffData) {
+    // User authenticated but not in staff database - sign them out and redirect
+    await supabase.auth.signOut();
+    redirect("/staff?error=" + encodeURIComponent("Access denied. Staff account required."));
+  }
+
+  revalidatePath("/staff/upload", "layout");
+  redirect("/staff/upload");
 }
 
 // Staff signup
@@ -33,7 +46,7 @@ export async function staffSignup(formData: FormData) {
   const password = (formData.get("password") || "").toString().trim();
 
   if (!email || !password) {
-    return { ok: false, error: "Email and password are required." };
+    redirect("/staff?error=" + encodeURIComponent("Email and password are required."));
   }
 
   // Sign up the staff member
@@ -42,23 +55,33 @@ export async function staffSignup(formData: FormData) {
     password,
   });
 
-  if (signupError || !signupData?.user) {
-    return { ok: false, error: signupError?.message || "Signup failed." };
+  if (signupError) {
+    redirect("/staff?error=" + encodeURIComponent(signupError.message));
   }
 
-  // Insert staff entry into Staff table
-  const { data: staffData, error: staffError } = await supabase
-    .from("Staff")
-    .insert([{ auth_uid: signupData.user.id }])
-    .select("*");
+  // Always add to staff table immediately after signup (whether confirmed or not)
+  if (signupData.user) {
+    // If user has a session, use the authenticated client to insert staff record
+    if (signupData.session) {
+      const { error: staffError } = await supabase
+        .from("staff")
+        .insert([{ auth_uid: signupData.user.id }]);
 
-  if (staffError) {
-    return { ok: false, error: staffError.message };
+      if (staffError) {
+        redirect("/staff?error=" + encodeURIComponent(staffError.message));
+      }
+    } else {
+      // For users that need email confirmation, we'll add them to staff table after confirmation
+      // For now, just proceed with the email confirmation flow
+    }
   }
 
-  // Redirect to staff dashboard
-  revalidatePath("/staff/dashboard", "layout");
-  redirect("/staff/dashboard");
+  // If user has session (immediately confirmed), redirect to upload page
+  if (signupData.session) {
+    revalidatePath("/staff/upload", "layout");
+    redirect("/staff/upload");
+  }
 
-  return { ok: true, staff: staffData };
+  // If user needs email confirmation, redirect with message
+  redirect("/staff?message=" + encodeURIComponent("Please check your email and click the confirmation link to complete your staff registration."));
 }

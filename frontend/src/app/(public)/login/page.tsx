@@ -98,7 +98,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                 </button>
               </form>
 
-              <div className="mt-8 text-center">
+              <div className="mt-8 text-center space-y-4">
                 <p className="text-gray-600">
                   Don't have an account?{" "}
                   <Link 
@@ -108,6 +108,16 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                     Sign up here
                   </Link>
                 </p>
+                
+                {/* Staff Login Button */}
+                <div className="pt-4 border-t border-gray-200">
+                  <Link 
+                    href="/staff" 
+                    className="inline-flex items-center justify-center w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 focus:ring-4 focus:ring-gray-200 focus:outline-none transition-colors"
+                  >
+                    Staff Login
+                  </Link>
+                </div>
               </div>
             </div>
 

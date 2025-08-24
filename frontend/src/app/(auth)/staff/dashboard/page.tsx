@@ -13,7 +13,7 @@ export default async function PrivatePage() {
   }
 
   const { data: StaffData, error: StaffError } = await supabase
-    .from("Staff")
+    .from("staff")
     .select("*")
     .eq("auth_uid", AuthData.user.id)
     .single();
