@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { AssetItem, fetchAssetsByGenderAndType } from "../actions";
+import { AssetItem, fetchAssetsByGenderAndType } from "../create/actions";
 import {
   Glasses,
   Shirt,

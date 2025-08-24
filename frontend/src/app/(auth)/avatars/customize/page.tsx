@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import Test from "./components/Test";
+import AvatarAssetPicker from "./components/AvatarAssetPicker";
 
 export default async function CustomizePage() {
   const supabase = await createClient();
@@ -20,7 +20,7 @@ export default async function CustomizePage() {
 
   return (
     <div className="mt-12">
-      <Test
+      <AvatarAssetPicker
         token={donor.rpm_token}
         userId={donor.rpm_user_id}
         gender="male"

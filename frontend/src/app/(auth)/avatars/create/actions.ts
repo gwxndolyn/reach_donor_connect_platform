@@ -178,38 +178,3 @@ export type AssetItem = {
   name: string;
   iconUrl: string;
 };
-
-export async function fetchAssetsByGenderAndType(
-  token: string,
-  gender: string,
-  type: Category,
-  page: number
-) {
-  console.log(`Fetching assets: gender=${gender}, type=${type}, page=${page}`);
-
-  const url = `https://api.readyplayer.me/v1/assets?gender=${gender}&gender=neutral&page=${page}&type=${type}`;
-  console.log(`API URL: ${url}`);
-
-  const response = await fetch(url, {
-    headers: {
-      "X-APP-ID":
-        process.env.READYPLAYERME_APPLICATION_ID || "68a7e922e142ad91c2d6e9fa",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  console.log("API response:", json);
-
-  if (Array.isArray(json.data)) {
-    const result = json.data.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      iconUrl: item.iconUrl,
-    }));
-    console.log("Mapped result:", result);
-    return result;
-  } else {
-    console.log("No data array in response.");
-    return [];
-  }
-}

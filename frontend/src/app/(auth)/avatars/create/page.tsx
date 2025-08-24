@@ -5,8 +5,15 @@ import {
   createAnonymousUser,
   fetchAllTemplates,
   saveTokenAndUserIdToDB,
-} from "./create/actions";
-import TemplateList from "./components/TemplateList";
+} from "./actions";
+import TemplateList from "../components/TemplateList";
+
+type TemplateItem = {
+  imageUrl: string;
+  gender: "female" | "male" | "unisex" | string;
+  usageType: "randomize" | "default" | string;
+  id: string;
+};
 
 export default async function AvatarPage() {
   const supabase = await createClient();
@@ -23,12 +30,19 @@ export default async function AvatarPage() {
     .single();
 
   if (DonorError || !DonorData.onboarded) {
-    return redirect("/signup/onboarding");
+    redirect("/signup/onboarding");
   }
 
-  if (!DonorData.avatar_id) {
-    return redirect("/avatars/create");
-  } else {
+  if (DonorData.avatar_id) {
     return redirect("/avatars/customize");
   }
+
+  const { token: avatarToken, rpm_user_id: rpmUserId } =
+    await createAnonymousUser();
+
+  await saveTokenAndUserIdToDB(avatarToken, AuthData.user.id, rpmUserId);
+
+  const avatarTemplates: TemplateItem[] = await fetchAllTemplates(avatarToken);
+
+  return <TemplateList avatarTemplates={avatarTemplates} />;
 }
