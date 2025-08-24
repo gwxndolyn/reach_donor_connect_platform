@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ArrowRight, Mail, Lock, AlertCircle } from "lucide-react";
+import { ArrowRight, Mail, Lock, AlertCircle } from "lucide-react";
 import { login } from "./actions";
 
 export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
@@ -13,9 +13,14 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-red-500" />
-                <span className="text-2xl font-bold text-gray-900">DonorConnect</span>
+              <div className="flex items-center justify-center mb-4">
+                <Image
+                  src="/logo.png"
+                  alt="DonorConnect"
+                  width={160}
+                  height={50}
+                  className="h-12 w-auto"
+                />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Welcome Back!
@@ -49,7 +54,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                       type="email"
                       required
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-all text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
                     />
                   </div>
                 </div>
@@ -69,7 +74,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                       type="password"
                       required
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-all text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
                     />
                   </div>
                 </div>
@@ -86,7 +91,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
 
                 <button
                   formAction={login}
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 focus:outline-none transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
                 >
                   Sign In
                   <ArrowRight className="h-5 w-5" />

@@ -21,8 +21,7 @@ type Region =
   | "central-western"
   | "eastern"
   | "southern"
-  | "wan-chai"
-  | "Wan Chai 灣仔";
+  | "wan-chai";
 
 export async function createDonor(formData: FormData) {
   const supabase = await createClient();
@@ -59,7 +58,6 @@ export async function createDonor(formData: FormData) {
       "eastern",
       "southern",
       "wan-chai",
-      "Wan Chai 灣仔",
     ].includes(region)
   ) {
     return { ok: false, error: "Invalid region." };
@@ -82,7 +80,7 @@ export async function createDonor(formData: FormData) {
 
   if (donorError) return { ok: false, error: donorError.message };
 
-  redirect("/dashboard");
+  redirect("/home");
 
   return { ok: true, donor: donorData };
 }

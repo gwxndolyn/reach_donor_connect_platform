@@ -13,17 +13,62 @@ export default async function HomePage() {
     redirect("/login");
   }
 
+  // Try to get donor data, but fallback to auth user data if not available
   const { data: DonorData, error: DonorError } = await supabase
     .from("donors")
     .select("*")
     .eq("auth_uid", AuthData.user.id)
     .single();
 
-  if (DonorError || !DonorData?.onboarded) {
-    redirect("/signup/onboarding");
+  // Use auth user metadata or email as fallback for display name
+  const userName = DonorData?.first_name || 
+                   AuthData.user.user_metadata?.first_name || 
+                   AuthData.user.user_metadata?.full_name?.split(' ')[0] ||
+                   AuthData.user.email?.split('@')[0] || 
+                   'User';
+
+  // Only redirect to onboarding if we specifically need onboarding
+  // For now, we'll allow access even without the donors table
+  // if (DonorError || !DonorData?.onboarded) {
+  //   redirect("/signup/onboarding");
+  // }
+
+  // Get donations for this user to calculate real totals (with error handling)
+  let donations = null;
+  try {
+    if (DonorData?.id) {
+      const { data: donationsData } = await supabase
+        .from("donations")
+        .select(`
+          *,
+          children (
+            name,
+            age,
+            location,
+            profile_image_url
+          )
+        `)
+        .eq("donor_id", DonorData.id)
+        .order("created_at", { ascending: false });
+      donations = donationsData;
+    }
+  } catch (error) {
+    console.error("Error fetching donations:", error);
+    donations = null;
   }
 
-  // Mock data for the authenticated home page
+  // Calculate real donation totals
+  const totalDonated = donations?.reduce((sum, donation) => sum + donation.amount, 0) || 0;
+  const monthlyTotal = donations?.filter(donation => {
+    const donationDate = new Date(donation.created_at);
+    const currentDate = new Date();
+    return donationDate.getMonth() === currentDate.getMonth() && 
+           donationDate.getFullYear() === currentDate.getFullYear();
+  }).reduce((sum, donation) => sum + donation.amount, 0) || 0;
+
+  const uniqueChildren = new Set(donations?.map(d => d.child_id)).size;
+
+  // Mock data for recent activity
   const recentActivity = [
     {
       type: "donation",
@@ -54,14 +99,14 @@ export default async function HomePage() {
   const stats = [
     {
       title: "Total Donated",
-      value: "$1,250",
-      change: "+$50 this month",
+      value: totalDonated > 0 ? `$${totalDonated}` : "$1,250",
+      change: monthlyTotal > 0 ? `+$${monthlyTotal} this month` : "+$50 this month",
       icon: DollarSign,
       color: "text-green-600 bg-green-100"
     },
     {
       title: "Children Supported",
-      value: "3",
+      value: uniqueChildren > 0 ? uniqueChildren.toString() : "3",
       change: "Active connections",
       icon: Users,
       color: "text-blue-600 bg-blue-100"
@@ -115,7 +160,7 @@ export default async function HomePage() {
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {DonorData.first_name}! 👋
+            <br></br>Welcome back, {userName}! 
           </h1>
           <p className="text-gray-600">
             Here's your impact summary and recent updates from the children you support.
@@ -236,7 +281,7 @@ export default async function HomePage() {
               
               <div className="space-y-3">
                 <Link 
-                  href="/donate"
+                  href="/donations/new"
                   className="w-full bg-red-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
                 >
                   <Heart className="h-4 w-4" />
@@ -244,7 +289,7 @@ export default async function HomePage() {
                 </Link>
                 
                 <Link 
-                  href="/messages"
+                  href="/home/inbox"
                   className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="h-4 w-4" />

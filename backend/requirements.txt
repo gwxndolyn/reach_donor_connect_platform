@@ -8,3 +8,5 @@ supabase           # Python client if you want backend→Supabase connection
 dotenv
 requests
 google-genai
+google-generativeai
+openai
