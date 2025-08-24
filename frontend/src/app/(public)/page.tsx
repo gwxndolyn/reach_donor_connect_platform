@@ -27,14 +27,14 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/signup" 
-                className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-red-600 hover:to-pink-700 transition-colors transform-none flex items-center justify-center gap-2"
               >
                 Start Giving Today
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <Link 
                 href="/login" 
-                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold text-lg hover:border-gray-400 hover:bg-gray-50 transition-all flex items-center justify-center"
+                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold text-lg hover:border-gray-400 hover:bg-gray-50 transition-colors transform-none flex items-center justify-center"
               >
                 Sign In
               </Link>
@@ -199,7 +199,7 @@ export default function LandingPage() {
           </p>
           <Link 
             href="/signup" 
-            className="bg-white text-red-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 inline-flex items-center gap-2"
+            className="bg-white text-red-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors transform-none inline-flex items-center gap-2"
           >
             Get Started Now
             <ArrowRight className="h-5 w-5" />

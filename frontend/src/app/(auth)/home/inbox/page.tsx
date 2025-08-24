@@ -281,7 +281,7 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="h-screen bg-white pt-12 overflow-hidden">
+    <div className="h-[calc(100vh-4rem)] pt-20 bg-white">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Sidebar - Children List */}
         <ResizablePanel defaultSize={40} minSize={35} maxSize={60}>

@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Heart, LogOut } from "lucide-react";
+import Image from "next/image";
+import { LogOut } from "lucide-react";
 import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -19,9 +20,14 @@ import {
 
 function Brand() {
   return (
-    <div className="flex items-center space-x-2">
-      <Heart className="h-6 w-6 text-red-500" />
-      <span className="text-xl font-bold text-gray-900">DonorConnect</span>
+    <div className="flex items-center">
+      <Image
+        src="/logo.png"
+        alt="DonorConnect"
+        width={120}
+        height={40}
+        className="h-10 w-auto"
+      />
     </div>
   );
 }

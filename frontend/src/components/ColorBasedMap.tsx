@@ -13,6 +13,7 @@ interface RegionData {
 interface ColorBasedMapProps {
   className?: string;
   regionCounts: Record<string, number>;
+  referralCounts: Record<string, number>;
 }
 
 // Map RGB colors from the image to districts
@@ -155,7 +156,7 @@ const findRegionByColor = (r: number, g: number, b: number): RegionData | null =
   return null;
 };
 
-export const ColorBasedMap = ({ className = "", regionCounts }: ColorBasedMapProps) => {
+export const ColorBasedMap = ({ className = "", regionCounts, referralCounts }: ColorBasedMapProps) => {
   const [hoveredRegion, setHoveredRegion] = useState<RegionData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -271,12 +272,20 @@ export const ColorBasedMap = ({ className = "", regionCounts }: ColorBasedMapPro
             top: tooltipPosition.y - 10,
           }}
         >
-          <div className="bg-tooltip-bg text-tooltip-text px-4 py-3 rounded-lg shadow-lg border border-map-border animate-fade-in">
+          <div className="bg-white text-tooltip-text px-4 py-3 rounded-lg shadow-lg border border-map-border animate-fade-in">
             <div className="text-sm font-semibold">{hoveredRegion.name}</div>
             <div className="text-xs opacity-90 mt-1 max-w-48">
               {regionCounts[hoveredRegion.id] !== undefined
-                ? `Donors from this region: ${regionCounts[hoveredRegion.id]}`
-                : "Loading..."}
+                ? `Donors from this region: ${regionCounts[hoveredRegion.id]}${
+                    referralCounts
+                      ? `\nReferrals from this region: ${
+                          isNaN(Number(referralCounts[hoveredRegion.id]))
+                            ? 0
+                            : referralCounts[hoveredRegion.id]
+                        }`
+                      : ""
+                  }`
+                : "No donors from this region yet. Refer your friends !"}
             </div>
           </div>
           <div className="absolute left-1/2 transform -translate-x-1/2 top-full">

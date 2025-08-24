@@ -52,7 +52,6 @@ export default async function RootLayout({
           </nav>
         )}
 
-        {/* Client-only providers go here */}
           <main>{children}</main>
       </body>
     </html>
