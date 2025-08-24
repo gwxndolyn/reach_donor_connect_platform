@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { createDonor } from "./actions";
 import Image from "next/image";
 import { User, MapPin, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 export default function OnboardingPage() {
   const [error, setError] = useState<string | null>(null);
@@ -93,9 +94,7 @@ export default function OnboardingPage() {
         {/* Header with Logo */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-8">
-            <Image
-              src="/logo.png"
-              alt="DonorConnect"
+            <Logo
               width={180}
               height={55}
               className="h-14 w-auto"

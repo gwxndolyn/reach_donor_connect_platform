@@ -86,8 +86,7 @@ export default async function HomePage() {
     {
       type: "donation",
       title: "Monthly donation processed",
-      description:
-        "Your $50 monthly donation to Maria Santos has been processed",
+      description: "Your $50 monthly donation to Emma has been processed",
       time: "2 hours ago",
       icon: Heart,
       color: "text-red-500 bg-red-50 dark:bg-red-900/30",
@@ -104,7 +103,7 @@ export default async function HomePage() {
     {
       type: "message",
       title: "Letter received",
-      description: "You received a thank you letter from Sofia Rodriguez",
+      description: "You received a thank you letter from Marcus",
       time: "3 days ago",
       icon: MessageCircle,
       color: "text-blue-500 bg-blue-50 dark:bg-blue-900/30",
@@ -145,26 +144,26 @@ export default async function HomePage() {
 
   const supportedChildren = [
     {
-      name: "Maria Santos",
+      name: "Carrie",
       age: 8,
-      location: "Philippines",
+      location: "Kowloon City 九龍城",
       image: "/image1.webp",
       progress: "Starting Grade 3 this year",
       totalDonated: "$600",
     },
     {
-      name: "Alex Chen",
-      age: 12,
-      location: "Cambodia",
+      name: "Alex",
+      age: 9,
+      location: "Sai Kung 西貢",
       image: "/image1.webp",
-      progress: "Graduated primary school",
+      progress: "Just completed Grade 2",
       totalDonated: "$450",
     },
     {
-      name: "Sofia Rodriguez",
-      age: 10,
-      location: "Guatemala",
-      image: "/image1.webp",
+      name: "Jamie",
+      age: 12,
+      location: "Sham Shui Po 深水埗",
+      image: "/image3.webp",
       progress: "Learning to read fluently",
       totalDonated: "$200",
     },

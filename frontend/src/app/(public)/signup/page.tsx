@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Mail, Lock, User, Shield, Check, AlertCircle, CheckCircle } from "lucide-react";
 import { signup } from "./actions";
+import { Logo } from "@/components/ui/logo";
 
 export default function SignupPage({ searchParams }: { searchParams: { error?: string; success?: string; email?: string } }) {
   const error = searchParams?.error;
@@ -69,9 +70,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
             {/* Logo */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center mb-4">
-                <Image
-                  src="/logo.png"
-                  alt="DonorConnect"
+                <Logo
                   width={160}
                   height={50}
                   className="h-12 w-auto"

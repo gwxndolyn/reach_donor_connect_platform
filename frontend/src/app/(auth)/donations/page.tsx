@@ -98,9 +98,9 @@ export default async function DonationsPage() {
       status: "completed",
       children: {
         name: "Alex Chen",
-        age: 12,
+        age: 9,
         location: "Sai Kung 西貢",
-        profile_image_url: "/image1.webp",
+        profile_image_url: "/image2.webp",
       },
     },
     {
@@ -110,10 +110,10 @@ export default async function DonationsPage() {
       donation_type: "one_time",
       status: "completed",
       children: {
-        name: "Ko Wah-Man",
-        age: 10,
+        name: "Jamie Ko",
+        age: 12,
         location: "Sham Shui Po 深水埗",
-        profile_image_url: "/image1.webp",
+        profile_image_url: "/image3.webp",
       },
     },
   ];
@@ -192,13 +192,15 @@ export default async function DonationsPage() {
 
         {/* Make New Donation Button */}
         <div className="mb-8">
-          <Link
-            href="/donations/new"
+          <a
+            href="https://reach.org.hk/#donate"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition-colors"
           >
             <Plus className="h-5 w-5" />
             Make a New Donation
-          </Link>
+          </a>
         </div>
 
         {/* Donations History */}

@@ -12,10 +12,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "https://donorconnect-orcin.vercel.app",  # Production frontend
+    "http://localhost:3000"                   # Local dev frontend
+]
+
 # ✅ Add this middleware block
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # frontend dev server
+    allow_origins=origins,  # frontend dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
