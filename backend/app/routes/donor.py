@@ -157,3 +157,14 @@ async def mark_notifications_read(donor_id: str, student_id: str):
         raise HTTPException(
             status_code=500, detail=f"Error marking notifications as read: {str(e)}"
         )
+
+@router.get("/unread_count/{donor_id}/{student_id}")
+async def get_unread_count(donor_id: str, student_id: str):
+    try:
+        count = database.count_unread_notifications(donor_id, student_id)
+        return {"unread_count": count}
+    except Exception as e:
+        print(f"Error getting unread count: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error marking notifications as read: {str(e)}"
+        )

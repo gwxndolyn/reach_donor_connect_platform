@@ -165,13 +165,12 @@ class DBServiceClass:
 
     def count_unread_notifications(self, donor_id: str, student_id: str):
         """Count unread notifications for a donor-student pair"""
-        # For now, return a default count since we don't have an is_read field
-        # You can add an 'is_read' boolean column to notifications table later
         res = (
             supabase.table("notifications")
             .select("*", count="exact")
             .eq("donor_id", donor_id)
             .eq("student_id", student_id)
+            .eq("is_read", False) 
             .execute()
         )
         return res.count or 0
