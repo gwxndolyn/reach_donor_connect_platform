@@ -228,9 +228,15 @@ export default function InboxPage() {
     e: React.UIEvent<HTMLDivElement, UIEvent>
   ) => {
     const el = e.currentTarget;
-    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 24;
+    const scrollPercentage = (el.scrollTop + el.clientHeight) / el.scrollHeight;
 
-    if (nearBottom && !hasScrolledToRead && selectedChild && donorId) {
+    // If user has scrolled past 30% of messages and hasn't triggered this before
+    if (
+      scrollPercentage > 0.3 &&
+      !hasScrolledToRead &&
+      selectedChild &&
+      donorId
+    ) {
       setHasScrolledToRead(true);
       await markNotificationsAsRead(String(donorId), String(selectedChild.id));
     }
@@ -281,7 +287,7 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] pt-20 bg-white">
+    <div className="h-[calc(100vh-4rem)] pt-28 bg-white">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Sidebar - Children List */}
         <ResizablePanel defaultSize={40} minSize={35} maxSize={60}>
@@ -390,9 +396,9 @@ export default function InboxPage() {
 
         <ResizablePanel defaultSize={60}>
           {selectedChild ? (
-            <div className="h-full flex flex-col overflow-hidden">
+            <div className="h-full flex flex-col">
               {/* Chat Header */}
-              <div className="p-4 border-b border-gray-200 bg-white">
+              <div className="p-4 border-b border-gray-200 bg-white flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="relative">
@@ -425,88 +431,86 @@ export default function InboxPage() {
               </div>
 
               {/* Messages */}
-              <ScrollArea className="flex-1">
-                <div
-                  className="flex-1 p-4 overflow-y-auto max-h-full"
-                  onScroll={handleMessageScroll}
-                >
-                  <div className="space-y-4 pb-4">
-                    {notifications.map((n, i) => (
-                      <div key={i} className="space-y-4">
-                        {/* Journal Image */}
-                        <div className="flex justify-start">
-                          <div className="max-w-xs lg:max-w-md">
-                            <div className="bg-gray-100 p-3 rounded-2xl">
-                              <p className="text-sm text-gray-900 mb-2 font-bold">
-                                📝 New journal entry
+              <ScrollArea
+                className="flex-1 h-0"
+                onScrollCapture={handleMessageScroll}
+              >
+                <div className="p-4 space-y-4 pb-4">
+                  {notifications.map((n, i) => (
+                    <div key={i} className="space-y-4">
+                      {/* Journal Image */}
+                      <div className="flex justify-start">
+                        <div className="max-w-xs lg:max-w-md">
+                          <div className="bg-gray-100 p-3 rounded-2xl">
+                            <p className="text-sm text-gray-900 mb-2 font-bold">
+                              📝 New journal entry
+                            </p>
+                            {n.journal_image ? (
+                              <img
+                                src={n.journal_image}
+                                alt="Journal entry"
+                                className="w-full h-auto rounded-lg"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src =
+                                    "/placeholder-image.png";
+                                }}
+                              />
+                            ) : (
+                              <p className="text-sm text-gray-500">
+                                No image available
                               </p>
-                              {n.journal_image ? (
-                                <img
-                                  src={n.journal_image}
-                                  alt="Journal entry"
-                                  className="w-full h-auto rounded-lg"
-                                  onError={(e) => {
-                                    (e.currentTarget as HTMLImageElement).src =
-                                      "/placeholder-image.png";
-                                  }}
-                                />
-                              ) : (
-                                <p className="text-sm text-gray-500">
-                                  No image available
-                                </p>
-                              )}
-                              <p className="text-xs text-gray-500 mt-2">
-                                Journal Entry Image
-                              </p>
-                            </div>
+                            )}
+                            <p className="text-xs text-gray-500 mt-2">
+                              Journal Entry Image
+                            </p>
                           </div>
                         </div>
+                      </div>
 
-                        {/* Learning Report */}
-                        <div className="flex justify-start">
-                          <div className="max-w-xs lg:max-w-md">
-                            <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl">
+                      {/* Learning Report */}
+                      <div className="flex justify-start">
+                        <div className="max-w-xs lg:max-w-md">
+                          <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl">
+                            <div className="mb-3">
+                              <p className="text-sm text-gray-900 mb-2 font-bold">
+                                📊 Learning Progress Report
+                              </p>
+                              <p className="text-lg font-bold text-blue-600">
+                                Overall Score:{" "}
+                                {n.learning_report?.overall_score ?? "N/A"}/5
+                              </p>
+                            </div>
+
+                            {n.learning_report?.progress_update && (
                               <div className="mb-3">
-                                <p className="text-sm text-gray-900 mb-2 font-bold">
-                                  📊 Learning Progress Report
+                                <p className="text-xs font-medium mb-1">
+                                  Progress Update:
                                 </p>
-                                <p className="text-lg font-bold text-blue-600">
-                                  Overall Score:{" "}
-                                  {n.learning_report?.overall_score ?? "N/A"}/5
+                                <p className="text-sm bg-gray-200 p-2 rounded">
+                                  {n.learning_report.progress_update}
                                 </p>
                               </div>
+                            )}
 
-                              {n.learning_report?.progress_update && (
-                                <div className="mb-3">
-                                  <p className="text-xs font-medium mb-1">
-                                    Progress Update:
-                                  </p>
-                                  <p className="text-sm bg-gray-200 p-2 rounded">
-                                    {n.learning_report.progress_update}
-                                  </p>
-                                </div>
-                              )}
+                            {n.learning_report?.updated_report && (
+                              <div className="mb-3">
+                                <p className="text-xs font-medium mb-1">
+                                  Teacher&apos;s Report:
+                                </p>
+                                <p className="text-sm bg-gray-200 p-2 rounded">
+                                  {n.learning_report.updated_report}
+                                </p>
+                              </div>
+                            )}
 
-                              {n.learning_report?.updated_report && (
-                                <div className="mb-3">
-                                  <p className="text-xs font-medium mb-1">
-                                    Teacher&apos;s Report:
-                                  </p>
-                                  <p className="text-sm bg-gray-200 p-2 rounded">
-                                    {n.learning_report.updated_report}
-                                  </p>
-                                </div>
-                              )}
-
-                              {n.learning_report?.scores && (
-                                <details className="mb-3">
-                                  <summary className="text-xs font-medium cursor-pointer hover:text-gray-700">
-                                    View Detailed Scores
-                                  </summary>
-                                  <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
-                                    {Object.entries(
-                                      n.learning_report.scores
-                                    ).map(([skill, score]) => (
+                            {n.learning_report?.scores && (
+                              <details className="mb-3">
+                                <summary className="text-xs font-medium cursor-pointer hover:text-gray-700">
+                                  View Detailed Scores
+                                </summary>
+                                <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
+                                  {Object.entries(n.learning_report.scores).map(
+                                    ([skill, score]) => (
                                       <div
                                         key={skill}
                                         className="flex justify-between bg-gray-200 p-1 rounded"
@@ -518,25 +522,25 @@ export default function InboxPage() {
                                           {String(score)}/5
                                         </span>
                                       </div>
-                                    ))}
-                                  </div>
-                                </details>
-                              )}
+                                    )
+                                  )}
+                                </div>
+                              </details>
+                            )}
 
-                              <p className="text-xs text-gray-500 mt-1">
-                                Learning Report
-                              </p>
-                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Learning Report
+                            </p>
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </ScrollArea>
 
               {/* Composer */}
-              <div className="p-4 border-t border-gray-200 bg-white">
+              <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <Input
