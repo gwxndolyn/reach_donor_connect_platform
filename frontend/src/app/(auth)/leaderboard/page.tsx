@@ -41,7 +41,7 @@ export default async function PrivatePage() {
 
   return (
     <main className="pt-12 md:pt-14"> {/* 48px then 56px on md */}
-      <div className="w-full bg-white rounded-2xl">
+      <div className="w-full bg-white rounded-2xl pt-20">
         <div className="flex items-center gap-8">
           <ColorBasedMap
             className="w-full h-full"

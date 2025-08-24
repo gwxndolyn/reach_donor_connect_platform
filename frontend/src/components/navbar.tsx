@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { User, LogOut, Gift } from "lucide-react";
+import { User, LogOut, Gift, ChevronDown } from "lucide-react";
 import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -18,27 +18,10 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-function Brand() {
-  return (
-    <Link
-        href="/home"
-        className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
-        aria-label="Go to Homepage"
-      >
-        <Image
-          src="/logo.png"
-          alt="DonorConnect"
-          width={120}
-          height={40}
-          className="h-10 w-auto"
-        />
-      </Link>
-  );
-}
-
 export function NavigationMenuDemo() {
   const [user, setUser] = React.useState<SupabaseUser | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
     const supabase = createClient();
@@ -60,109 +43,163 @@ export function NavigationMenuDemo() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Loading & logged-out: show brand only
-  if (loading || !user) {
+  // Loading state
+  if (loading) {
     return (
-      <div className="flex items-center justify-between w-full py-2">
-        <Brand />
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-4">
+        <div 
+          className="border border-white/30 rounded-2xl shadow-2xl px-6 py-4"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="h-8 w-32 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // Logged-in: full navbar
-  return (
-    <div className="flex items-center justify-between w-full py-2">
-      {/* Logo/Brand and Navigation Menu aligned to the left */}
-      <div className="flex items-center space-x-6">
-        <Brand />
-
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
+  // Not logged in
+  if (!user) {
+    return (
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-4">
+        <div 
+          className="border border-white/30 rounded-2xl shadow-2xl px-6 py-4"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <Image
+                src="/logo.png"
+                alt="DonorConnect"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+              />
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Link 
+                href="/login" 
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
               >
-                <Link href="/home/inbox">Mail Inbox</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
+                Sign In
+              </Link>
+              <Link 
+                href="/signup" 
+                className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-full font-medium hover:from-red-600 hover:to-pink-700 transition-all"
               >
-                <Link href="/leaderboard">Leaderboard Map</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+                Get Started
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      {/* User Menu */}
-      <div className="flex items-center space-x-2">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="flex items-center space-x-2 px-2 py-1">
-                <span className="text-lg">👤</span>
-                <span className="text-sm font-medium">My Account</span>
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="flex flex-col gap-1 p-2 w-48">
-                  <li>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href="/donations"
-                        className="flex flex-row items-center space-x-2 w-full p-2 rounded-md hover:bg-accent text-left w-full"
-                      >
-                        <Gift className="h-4 w-4" />
-                        <span>My Donations</span>
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                  <li>
-                    <NavigationMenuLink asChild>
-                      <form action={logout} className="w-full">
-                        <button
-                          type="submit"
-                          className="flex items-center space-x-2 w-full text-left rounded-md hover:bg-accent"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          <span>Sign Out</span>
-                        </button>
-                      </form>
-                    </NavigationMenuLink>
-                  </li>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+  // Logged in - full navbar
+  return (
+    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-4">
+      <div className="bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/home" className="hover:opacity-80 transition-opacity">
+            <Image
+              src="/logo.png"
+              alt="DonorConnect"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+            />
+          </Link>
+
+          {/* Center Navigation */}
+          <nav className="flex items-center space-x-8">
+            <Link 
+              href="/donations" 
+              className="text-gray-600 hover:text-red-600 font-medium transition-colors"
+            >
+              Donations
+            </Link>
+            <Link 
+              href="/home/inbox" 
+              className="text-gray-600 hover:text-red-600 font-medium transition-colors"
+            >
+              Inbox
+            </Link>
+            <Link 
+              href="/leaderboard" 
+              className="text-gray-600 hover:text-red-600 font-medium transition-colors"
+            >
+              Leaderboard
+            </Link>
+          </nav>
+
+          {/* User Profile Menu */}
+          <div className="relative" onMouseLeave={() => setDropdownOpen(false)}>
+            <button
+              onMouseEnter={() => setDropdownOpen(true)}
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center space-x-2 bg-gray-50 hover:bg-gray-100 rounded-full px-3 py-2 transition-all"
+            >
+              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-gray-300">
+                <User className="h-5 w-5 text-gray-600" />
+              </div>
+              <span className="hidden sm:block text-sm font-medium text-gray-700">
+                {user.email?.split('@')[0] || 'My Account'}
+              </span>
+              <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                  <p className="text-sm font-medium text-gray-900">{user.email?.split('@')[0] || 'User'}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <div className="py-2">
+                  <Link
+                    href="/donations"
+                    className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <Gift className="h-4 w-4" />
+                    <span>My Donations</span>
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Profile Settings</span>
+                  </Link>
+                  <hr className="my-2 border-gray-100" />
+                  <form action={logout}>
+                    <button
+                      type="submit"
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className="block select-none space-y-1 rounded-md  leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";

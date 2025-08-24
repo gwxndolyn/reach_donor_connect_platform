@@ -236,7 +236,7 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] pt-12 bg-white">
+    <div className="h-[calc(100vh-4rem)] pt-20 bg-white">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Sidebar - Children List */}
         <ResizablePanel defaultSize={30} minSize={25} maxSize={50}>
@@ -316,7 +316,7 @@ export default function InboxPage() {
 
         {/* Right Side - Chat Area */}
         <ResizablePanel defaultSize={70}>
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col pt-20">
             {/* Chat Header */}
             <div className="p-4 border-b border-gray-200 bg-white">
               <div className="flex items-center justify-between">
