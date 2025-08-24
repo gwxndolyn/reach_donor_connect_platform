@@ -95,7 +95,7 @@ class DBServiceClass:
         return donor_id
 
     def notify_donor_of_new_report(
-        self, donor_id: str, student_id: str, learning_report: dict, journal: str
+        self, donor_id: str, student_id: str, learning_report: dict, journal: str, journal_topic: str
     ):
         try:
             data = {
@@ -103,6 +103,8 @@ class DBServiceClass:
                 "student_id": student_id,
                 "learning_report": learning_report,
                 "journal_image": journal,
+                "journal_topic": journal_topic,
+                "is_read": False,
             }
             res = supabase.table("notifications").insert(data).execute()
             return res
@@ -119,3 +121,63 @@ class DBServiceClass:
         )
         print(res.data)
         return res.data
+
+    def get_all_children(self, donor_id: str):
+        res = (
+            supabase.table("student_donor_links")
+            .select("student_id")
+            .eq("donor_id", donor_id)
+            .execute()
+        )
+        return res.data
+
+    def get_child_information_by_id(self, student_id: str):
+        res = (
+            supabase.table("students")
+            .select("*")
+            .eq("student_id", student_id)
+            .execute()
+        )
+        if res.data:
+            return res.data[0]
+        return None
+
+    def get_donor_by_supabase_id(self, supabase_id: str):
+        res = (
+            supabase.table("donors").select("id").eq("auth_uid", supabase_id).execute()
+        )
+        if res.data:
+            return res.data
+        return None
+
+    def get_latest_notification(self, donor_id: str, student_id: str):
+        """Get the most recent notification for a donor-student pair"""
+        res = (
+            supabase.table("notifications")
+            .select("*")
+            .eq("donor_id", donor_id)
+            .eq("student_id", student_id)
+            .order("created_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+        if res.data:
+            return res.data[0]
+        return None
+
+    def count_unread_notifications(self, donor_id: str, student_id: str):
+        """Count unread notifications for a donor-student pair"""
+        res = (
+            supabase.table("notifications")
+            .select("*", count="exact")
+            .eq("donor_id", donor_id)
+            .eq("student_id", student_id)
+            .eq("is_read", False) 
+            .execute()
+        )
+        return res.count or 0
+
+    def mark_notifications_as_read(self, donor_id: str, student_id: str):
+        """Mark all notifications as read for a donor-student pair"""
+        supabase.table("notifications").update({"is_read": True}).eq("donor_id", donor_id).eq("student_id", student_id).execute()
+        return {"success": True, "message": "Notifications marked as read"}

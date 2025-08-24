@@ -1,29 +1,45 @@
-# Python caches
-__pycache__/
+# -------------------------
+# Global (OS / Env / Misc)
+# -------------------------
+.DS_Store
+*.log
+.env
+*.env
+.env.local
+.env.*.local
+
+# -------------------------
+# Python (backend)
+# -------------------------
+**/__pycache__/
 *.py[cod]
 *$py.class
+# virtualenvs
+venv/
+backend/venv/
 
-# --- Frontend ---
+# If you use Poetry:
+# .venv/
+
+# -------------------------
+# Node / Next.js (frontend)
+# -------------------------
 frontend/node_modules/
 frontend/.next/
 frontend/out/
 frontend/.env
-frontend/*.log
-frontend/venv/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/.turbo/
+# Optional: if you deploy with Vercel
+frontend/.vercel/
 
-# --- Backend ---
-backend/venv/
-backend/__pycache__/
-backend/app/__pycache__/
-backend/*.pyc
-backend/.env
-backend/app/routes/__pycache__/
-backend/app/services/__pycache__/
-backend/app/models/__pycache__/
-backend/app/models/__pycache__/schemas.cpython-311.pyc
-
-# --- General ---
-.env
-*.env
-.DS_Store
-.env.local
+# -------------------------
+# Build / Artifacts (general)
+# -------------------------
+dist/
+build/

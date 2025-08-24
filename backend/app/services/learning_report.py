@@ -12,12 +12,12 @@ class LearningReportClass:
         self.notifier = NotificationService()
         self.linking_service = LinkingServiceClass()
 
-    async def generate_learning_report(self, student_id: str, new_journal: str):
+    async def generate_learning_report(self, student_id: str, new_journal: str, journal_topic: str):
         existing_data = await self.db.get_data_by_student(student_id)
 
         latest_report = existing_data.latest_report if existing_data else {}
 
-        report = self.llm.get_updated_learning_report(new_journal, latest_report)
+        report = self.llm.get_updated_learning_report(new_journal, latest_report, journal_topic)
         print("Generated Report:", report)
 
         await self.db.save_new_submission(

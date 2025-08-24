@@ -1,3 +1,4 @@
+// This is a SERVER COMPONENT (no "use client")
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -18,25 +19,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DonorConnect - Connect Hearts, Change Lives",
-  description: "Bridge the gap between generous donors and children in need through transparent, impactful giving.",
+  description:
+    "Bridge the gap between generous donors and children in need through transparent, impactful giving.",
 };
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  const headersList = headers();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
-  
-  // Pages where navbar should NOT be shown
+
   const publicPages = ["/", "/login", "/signup", "/error"];
-  const shouldHideNavbar = publicPages.includes(pathname) || pathname.startsWith("/signup/");
-  
-  // Only show navbar for authenticated users on protected pages
+  const shouldHideNavbar =
+    publicPages.includes(pathname) || pathname.startsWith("/signup/");
+
   const showNavbar = user !== null && !shouldHideNavbar;
 
   // Check if user is staff (only if user exists and we should show navbar)
@@ -55,6 +56,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+
         {/* Navbar - only show for donors, not staff */}
         {showNavbar && !isStaff && (
           <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -64,8 +66,7 @@ export default async function RootLayout({
           </nav>
         )}
 
-        {/* Main content */}
-        <main className="">{children}</main>
+          <main>{children}</main>
       </body>
     </html>
   );

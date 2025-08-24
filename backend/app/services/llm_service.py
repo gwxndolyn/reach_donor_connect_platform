@@ -28,7 +28,7 @@ class LLMClass:
             "gemini-1.5-flash"
         )  # ✅ Use updated model name
 
-    def build_prompt(self, new_entry: str, previous_report: Optional[dict]) -> str:
+    def build_prompt(self, new_entry: str, previous_report: Optional[dict], journal_topic: str) -> str:
         prev = json.dumps(previous_report, indent=2) if previous_report else "None"
 
         categories = "\n".join(
@@ -51,9 +51,10 @@ class LLMClass:
         You will receive:
         - A new journal entry from a child
         - The previous learning report (or None)
+        - A journal topic to guide your evaluation
 
         Your tasks:
-        1. Score the journal in each of the 13 categories (1–5 scale)
+        1. Score the journal in each of the 13 categories (1–5 scale) based on the journal topic provided
         2. Provide the average overall score (1 decimal)
         3. Compare the new journal to the previous report and describe improvements or regressions
         4. Write a donor-friendly summary of this submission
@@ -67,14 +68,17 @@ class LLMClass:
         Previous Report:
         {prev}
 
+        Journal Topic:
+        {journal_topic}
+
         Output format (must follow this JSON structure):
         {json.dumps(output_format, indent=2)}
         """.strip()
 
     def get_updated_learning_report(
-        self, new_journal: str, previous_report: Optional[dict] = None
+        self, new_journal: str, previous_report: Optional[dict] = None, journal_topic: str = ""
     ) -> dict:
-        prompt = self.build_prompt(new_journal, previous_report)
+        prompt = self.build_prompt(new_journal, previous_report, journal_topic)
 
         try:
             response = self.model.generate_content(prompt)
