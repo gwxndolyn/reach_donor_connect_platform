@@ -6,7 +6,7 @@ import { login } from "./actions";
 export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
   const error = searchParams?.error;
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="min-h-screen flex">
         {/* Left Side - Login Form */}
         <div className="flex-1 flex items-center justify-center px-6 py-12">
@@ -22,39 +22,39 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                   className="h-12 w-auto"
                 />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 Welcome Back!
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Sign in to continue your journey of giving
               </p>
             </div>
 
             {/* Login Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
               {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
                 </div>
               )}
               <form className="space-y-6">
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
                 </div>
@@ -62,59 +62,69 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="password"
                       name="password"
                       type="password"
                       required
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
                   <label className="flex items-center">
-                    <input type="checkbox" className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-                    <span className="ml-2 text-gray-600">Remember me</span>
+                    <input type="checkbox" className="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500 dark:focus:ring-red-400" />
+                    <span className="ml-2 text-gray-600 dark:text-gray-300">Remember me</span>
                   </label>
-                  <Link href="/forgot-password" className="text-red-600 hover:text-red-700 font-medium">
+                  <Link href="/forgot-password" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium">
                     Forgot password?
                   </Link>
                 </div>
 
                 <button
                   formAction={login}
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
                 >
                   Sign In
                   <ArrowRight className="h-5 w-5" />
                 </button>
               </form>
 
-              <div className="mt-8 text-center">
-                <p className="text-gray-600">
+              <div className="mt-8 text-center space-y-4">
+                <p className="text-gray-600 dark:text-gray-300">
                   Don't have an account?{" "}
                   <Link 
                     href="/signup" 
-                    className="text-red-600 hover:text-red-700 font-semibold"
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-semibold"
                   >
                     Sign up here
                   </Link>
                 </p>
+                
+                {/* Staff Login Button */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+                  <Link 
+                    href="/staff" 
+                    className="inline-flex items-center justify-center w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 focus:outline-none transition-colors"
+                  >
+                    Staff Login
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Trust Indicators */}
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500 mb-4">Trusted by 500+ donors worldwide</p>
-              <div className="flex items-center justify-center gap-6 text-xs text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Trusted by 500+ donors worldwide</p>
+              <div className="flex items-center justify-center gap-6 text-xs text-gray-400 dark:text-gray-500">
                 <span className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   Secure Login

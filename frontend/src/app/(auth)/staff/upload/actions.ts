@@ -28,7 +28,8 @@ export async function uploadNotes(formData: FormData) {
   const supabase = await createClient();
 
   // Authenticate user
-  const { data: userData, error: userFetchError } = await supabase.auth.getUser();
+  const { data: userData, error: userFetchError } =
+    await supabase.auth.getUser();
   if (userFetchError || !userData?.user) {
     redirect("/login");
   }
@@ -36,6 +37,7 @@ export async function uploadNotes(formData: FormData) {
   try {
     const file = formData.get("file") as File;
     const student_id = (formData.get("student_id") || "").toString();
+    const journal_topic = (formData.get("journal_topic") || "").toString();
 
     if (!file || !student_id) {
       return { ok: false, error: "Missing file or student id." };
@@ -50,10 +52,16 @@ export async function uploadNotes(formData: FormData) {
     // 1️⃣ Upload image to Supabase Storage
     const uploadResult = await supabase.storage
       .from("notes")
-      .upload(filePath, file, { contentType: `image/${fileExt}`, upsert: false });
+      .upload(filePath, file, {
+        contentType: `image/${fileExt}`,
+        upsert: false,
+      });
 
     if (uploadResult.error) {
-      console.log("Error uploading file into storage:", uploadResult.error.message);
+      console.log(
+        "Error uploading file into storage:",
+        uploadResult.error.message
+      );
       return { ok: false, error: uploadResult.error.message };
     }
 
@@ -66,19 +74,29 @@ export async function uploadNotes(formData: FormData) {
     if (!fileUrl) return { ok: false, error: "Failed to get file URL." };
 
     // 3️⃣ Call FastAPI backend to extract text
-    const response = await fetch("http://127.0.0.1:8000/notes/upload", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/upload`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ student_id, file_url: fileUrl }),
+      body: JSON.stringify({
+        student_id,
+        file_url: fileUrl,
+        journal_topic: journal_topic,
+      }),
     });
 
     if (!response.ok) {
-      return { ok: false, error: `Unexpected error scanning text, please retry upload` };
+      return {
+        ok: false,
+        error: `Unexpected error scanning text, please retry upload`,
+      };
     }
 
     const data = await response.json();
-    return { ok: true, extracted_text: data.extracted_text, student_id: data.student_id };
-    
+    return {
+      ok: true,
+      extracted_text: data.extracted_text,
+      student_id: data.student_id,
+    };
   } catch (err: any) {
     console.error("Unexpected error:", err.message);
     return { ok: false, error: "Unexpected error during upload." };

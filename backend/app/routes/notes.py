@@ -10,6 +10,7 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 class NoteUploadRequest(BaseModel):
     student_id: str
     file_url: str
+    journal_topic: str
 
 @router.post("/upload")
 async def upload_note(request: NoteUploadRequest):
@@ -23,15 +24,17 @@ async def upload_note(request: NoteUploadRequest):
         payload = {
             "student_id": request.student_id,
             "image_url": request.file_url,
-            "extracted_text": extracted_text,
+            "extracted_text": extracted_text
         }
+        print(payload)
 
         supabase.table("journal_entries").insert(payload).execute()
 
         submission_payload = JournalSubmission(
             student_id = request.student_id,
             journal = extracted_text,
-            image_url = request.file_url
+            image_url = request.file_url,
+            journal_topic = request.journal_topic
         )
 
         submission_result = await submit_journal(submission_payload)

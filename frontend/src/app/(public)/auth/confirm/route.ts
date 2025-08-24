@@ -13,11 +13,31 @@ export async function GET(request: NextRequest) {
   if (token_hash && type) {
     const supabase = await createClient();
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     });
-    if (!error) {
+    
+    if (!error && data.user) {
+      // After successful email confirmation, check if user came from staff signup
+      // Try to add them to staff table (this will fail silently if they're already there or not a staff user)
+      const { error: staffError } = await supabase
+        .from("staff")
+        .insert([{ auth_uid: data.user.id }]);
+      
+      // Ignore errors here - user might already exist or might not be staff
+      
+      // Check if they're a staff user and redirect appropriately
+      const { data: staffData } = await supabase
+        .from("staff")
+        .select("*")
+        .eq("auth_uid", data.user.id)
+        .single();
+        
+      if (staffData) {
+        redirect("/staff/upload");
+      }
+      
       // redirect user to specified redirect URL or root of app
       redirect(next);
     }
