@@ -13,7 +13,7 @@ export default async function PrivatePage() {
   }
 
   const { data: DonorData, error: DonorError } = await supabase
-    .from("Donors")
+    .from("donors")
     .select("*")
     .eq("auth_uid", AuthData.user.id)
     .single();
@@ -23,7 +23,9 @@ export default async function PrivatePage() {
   }
 
   return (
-    <main className="pt-12 md:pt-14"> {/* 48px then 56px on md */}
+    <main className="pt-12 md:pt-14">
+      {" "}
+      {/* 48px then 56px on md */}
       <div className="w-full bg-white rounded-2xl">
         <div className="flex items-center gap-8">
           <ColorBasedMap className="w-full h-full" />

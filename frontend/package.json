@@ -9,12 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
+    "@lucide/lab": "^0.1.2",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
-    "@google/model-viewer": "^4.1.0",
     "@readyplayerme/react-avatar-creator": "^0.5.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.56.0",

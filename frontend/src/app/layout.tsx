@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DonorConnect - Connect Hearts, Change Lives",
-  description: "Bridge the gap between generous donors and children in need through transparent, impactful giving.",
+  description:
+    "Bridge the gap between generous donors and children in need through transparent, impactful giving.",
 };
 
 export default async function RootLayout({
@@ -26,15 +27,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  const headersList = headers();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
-  
+
   // Pages where navbar should NOT be shown
   const publicPages = ["/", "/login", "/signup", "/error"];
-  const shouldHideNavbar = publicPages.includes(pathname) || pathname.startsWith("/signup/");
-  
+  const shouldHideNavbar =
+    publicPages.includes(pathname) || pathname.startsWith("/signup/");
+
   // Only show navbar for authenticated users on protected pages
   const showNavbar = user !== null && !shouldHideNavbar;
 

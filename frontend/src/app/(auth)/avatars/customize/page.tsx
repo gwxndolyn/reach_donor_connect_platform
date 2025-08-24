@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import GLBViewer from "./components/GLBViewer";
+import Test from "./components/Test";
 
 export default async function CustomizePage() {
   const supabase = await createClient();
@@ -10,18 +10,23 @@ export default async function CustomizePage() {
   if (!userData.user) return redirect("/login");
 
   const { data: donor, error: donorErr } = await supabase
-    .from("Donors")
-    .select("onboarded,rpm_token,avatar_id")
+    .from("donors")
+    .select("rpm_token,onboarded,rpm_user_id,avatar_id, donation_amount")
     .eq("auth_uid", userData.user.id)
     .single();
 
-  if (donorErr || !donor) return redirect("/signup/onboarding");
-  if (!donor.onboarded) return redirect("/signup/onboarding");
+  if (donorErr || !donor || !donor.onboarded)
+    return redirect("/signup/onboarding");
 
   return (
-    <div>
-      <h1>Customize Your Avatar</h1>
-      <GLBViewer url={`https://models.readyplayer.me/${donor.avatar_id}.glb`} />
+    <div className="mt-12">
+      <Test
+        token={donor.rpm_token}
+        userId={donor.rpm_user_id}
+        gender="male"
+        avatarId={donor.avatar_id}
+        donationAmount={donor.donation_amount}
+      />
     </div>
   );
 }

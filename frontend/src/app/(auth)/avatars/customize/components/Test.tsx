@@ -1,0 +1,389 @@
+"use client";
+
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import Image from "next/image";
+import GLBViewer, { GLBViewerHandle } from "./GLBViewer";
+
+// ---- Types ----
+export type RpmAsset = {
+  id: string;
+  name: string;
+  iconUrl: string;
+};
+
+export type RpmAssetType = "costume" | "outfit";
+
+type Props = {
+  token: string; // Ready Player Me API token (Bearer)
+  userId: string; // Ready Player Me user ID
+  donationAmount: number; // $0, $100, $500 tiers
+  gender: "male" | "female";
+  initialType?: RpmAssetType;
+  avatarId: string;
+  onSelect?: (asset: RpmAsset) => void; // Optional external hook
+  className?: string;
+};
+
+// Map of sidebar items → RPM type & emoji icon
+const SIDEBAR: { key: RpmAssetType; label: string; emoji: string }[] = [
+  { key: "outfit", label: "Full Outfit", emoji: "👗" },
+];
+
+const APP_ID = "68a7e922e142ad91c2d6e9fa"; // Ready Player Me application ID
+
+// Small inline lock icon (no extra deps)
+function LockIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      {...props}
+    >
+      <path d="M7 10V8a5 5 0 1 1 10 0v2" />
+      <rect x="5" y="10" width="14" height="11" rx="2" />
+      <circle cx="12" cy="16" r="2" />
+    </svg>
+  );
+}
+
+export default function AvatarAssetPicker({
+  token,
+  userId,
+  donationAmount,
+  gender,
+  initialType = "outfit",
+  avatarId,
+  onSelect: onSelectProp,
+  className,
+}: Props) {
+  const [type, setType] = useState<RpmAssetType>(initialType);
+  const [assets, setAssets] = useState<RpmAsset[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // UI state: show overlay while the viewer reloads the model
+  const [viewerLoading, setViewerLoading] = useState(false);
+
+  const viewerRef = useRef<GLBViewerHandle>(null);
+
+  // Unlock rules: <100 → first 2; >=100 → first 5; >=500 → all
+  const unlockedCount = useMemo(() => {
+    if (donationAmount >= 500) return Number.POSITIVE_INFINITY; // unlock all
+    if (donationAmount >= 100) return 5; // first 5
+    return 2; // first 2
+  }, [donationAmount]);
+
+  // Next milestone helper for UI copy & progress bar
+  const nextMilestone = useMemo(() => {
+    if (donationAmount < 100) return 100;
+    if (donationAmount < 500) return 500;
+    return null;
+  }, [donationAmount]);
+
+  // Build the fetch URL when deps change
+  const url = useMemo(
+    () =>
+      `https://api.readyplayer.me/v1/assets?filter=usable-by-user-and-app&filterApplicationId=${APP_ID}&filterUserId=${userId}&gender=${gender}&type=${type}&limit=20`,
+    [type, gender, userId]
+  );
+
+  // Apply + Save avatar, then refresh viewer
+  const handleSelect = async (asset: RpmAsset, rpmKey: RpmAssetType) => {
+    try {
+      setViewerLoading(true);
+
+      const patch = await fetch(
+        `https://api.readyplayer.me/v2/avatars/${avatarId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "X-APP-ID": APP_ID,
+          },
+          body: JSON.stringify({
+            data: {
+              assets: {
+                [rpmKey]: asset.id,
+              },
+            },
+          }),
+        }
+      );
+
+      if (!patch.ok) throw new Error(await patch.text());
+
+      const save = await fetch(
+        `https://api.readyplayer.me/v2/avatars/${avatarId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-APP-ID": APP_ID,
+          },
+        }
+      );
+      if (!save.ok) throw new Error(await save.text());
+
+      onSelectProp?.(asset);
+
+      // Wait for the model-viewer to fully load the refreshed asset
+      await viewerRef.current?.refresh();
+    } catch (e) {
+      console.error("Failed to update/save avatar:", e);
+    } finally {
+      setViewerLoading(false);
+    }
+  };
+
+  // Fetch assets whenever the sidebar selection changes
+  useEffect(() => {
+    let isCurrent = true;
+    const controller = new AbortController();
+
+    async function run() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(url, {
+          signal: controller.signal,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-APP-ID": APP_ID,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`Request failed: ${res.status}`);
+        }
+
+        const json = await res.json();
+        const items: RpmAsset[] = (json?.data ?? []).map((it: any) => ({
+          id: String(it?.id ?? it?.assetId ?? ""),
+          name: String(it?.name ?? it?.title ?? "Untitled"),
+          iconUrl: String(
+            it?.iconUrl ?? it?.images?.thumbnail ?? it?.images?.icon ?? ""
+          ),
+        }));
+
+        if (!isCurrent) return;
+        // Swap elements at positions 0 and 2 (0-based) before saving to state
+        if (items.length > 2) {
+          const tmp = items[0];
+          items[0] = items[2];
+          items[2] = tmp;
+        }
+        setAssets(items);
+      } catch (e: any) {
+        if (!isCurrent) return;
+        if (e?.name !== "AbortError") setError(e?.message ?? "Unknown error");
+      } finally {
+        if (isCurrent) setLoading(false);
+      }
+    }
+
+    run();
+    return () => {
+      isCurrent = false;
+      controller.abort();
+    };
+  }, [url, token]);
+
+  // UI helpers for locking
+  const isLocked = (index: number) =>
+    index >= Math.min(unlockedCount, assets.length);
+  const remainingToNext = nextMilestone
+    ? Math.max(0, nextMilestone - donationAmount)
+    : 0;
+
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="relative w-full">
+        {/* Hide viewer while it reloads to avoid flashing partially-loaded model */}
+        <div
+          className={
+            viewerLoading
+              ? "opacity-0"
+              : "opacity-100 transition-opacity duration-300"
+          }
+        >
+          <GLBViewer
+            ref={viewerRef}
+            url={`https://models.readyplayer.me/${avatarId}.glb`}
+          />
+        </div>
+        {viewerLoading && (
+          <div className="absolute inset-0 grid place-items-center bg-white/70 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-gray-700 text-sm">
+              <svg
+                className="animate-spin h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+              Updating avatar…
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tier status bar (progress towards $500) */}
+      <div className="w-full px-4 py-3 flex items-center gap-3">
+        <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+          <div
+            className="h-full bg-cyan-400 transition-all"
+            style={{ width: `${Math.min(100, (donationAmount / 500) * 100)}%` }}
+          />
+        </div>
+        <div className="text-sm text-gray-600 whitespace-nowrap">
+          {donationAmount >= 500
+            ? "All items unlocked"
+            : nextMilestone
+            ? `Donate $${remainingToNext} more to reach $${nextMilestone}`
+            : null}
+        </div>
+      </div>
+
+      <div
+        className={
+          "w-full h-full grid grid-cols-[1fr_auto] gap-0 " + (className ?? "")
+        }
+      >
+        {/* Left: Grid of asset icons */}
+        <div className="bg-gradient-to-b from-cyan-50 to-white p-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            {loading &&
+              Array.from({ length: 9 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-[1/1] rounded-xl bg-white shadow-sm border border-gray-100 animate-pulse"
+                />
+              ))}
+
+            {!loading && assets.length === 0 && (
+              <div className="col-span-full text-center text-gray-500 py-8">
+                {error ? `Error: ${error}` : "No items found."}
+              </div>
+            )}
+
+            {!loading &&
+              assets.map((asset, idx) => {
+                const locked = isLocked(idx);
+                const buttonClasses = [
+                  "relative group aspect-[1/1] rounded-xl overflow-hidden",
+                  "border transition-shadow bg-white shadow-sm",
+                  locked
+                    ? "border-gray-200"
+                    : viewerLoading
+                    ? "border-transparent opacity-60 cursor-wait"
+                    : "border-transparent hover:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400",
+                ].join(" ");
+
+                return (
+                  <button
+                    key={asset.id}
+                    className={buttonClasses}
+                    title={
+                      locked
+                        ? `Locked – donate $${remainingToNext} more to unlock`
+                        : viewerLoading
+                        ? "Applying and loading…"
+                        : asset.name
+                    }
+                    onClick={() =>
+                      !locked && !viewerLoading && handleSelect(asset, type)
+                    }
+                    disabled={locked || viewerLoading}
+                    aria-disabled={locked}
+                  >
+                    {asset.iconUrl ? (
+                      <Image
+                        src={asset.iconUrl}
+                        alt={asset.name}
+                        width={256}
+                        height={256}
+                        className={
+                          "h-full w-full object-cover transition-transform " +
+                          (locked
+                            ? "grayscale blur-[1px] opacity-70"
+                            : "group-active:scale-95")
+                        }
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center text-gray-400 text-xs p-2">
+                        No preview
+                      </div>
+                    )}
+
+                    {/* Locked overlay */}
+                    {locked && (
+                      <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex flex-col items-center justify-center gap-2 text-white">
+                        <span className="inline-flex items-center gap-2 text-sm font-medium">
+                          <LockIcon className="w-4 h-4" /> Locked
+                        </span>
+                        {nextMilestone && (
+                          <span className="text-[11px] opacity-90">
+                            Donate ${remainingToNext} more to unlock
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Corner ribbon for locked */}
+                    {locked && (
+                      <div className="pointer-events-none absolute -top-1.5 -right-10 rotate-45 bg-black/70 text-white text-[10px] tracking-wider px-10 py-1 shadow">
+                        LOCKED
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Right: Vertical sidebar */}
+        <div className="w-16 sm:w-20 bg-white border-l border-gray-200 flex flex-col items-center py-4 gap-4">
+          {SIDEBAR.map((item) => {
+            const active = item.key === type;
+            return (
+              <button
+                key={item.key}
+                onClick={() => setType(item.key)}
+                className={[
+                  "w-12 h-12 rounded-xl flex items-center justify-center text-xl",
+                  "transition-all border",
+                  active
+                    ? "bg-cyan-50 border-cyan-300 shadow-sm"
+                    : "bg-gray-50 border-gray-200 hover:bg-gray-100",
+                ].join(" ")}
+                aria-label={item.label}
+                title={item.label}
+              >
+                <span className="select-none" aria-hidden>
+                  {item.emoji}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
