@@ -287,20 +287,20 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] pt-28 bg-white">
+    <div className="h-[calc(100vh-4rem)] pt-28 bg-white dark:bg-gray-900">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Sidebar - Children List */}
         <ResizablePanel defaultSize={40} minSize={35} maxSize={60}>
-          <div className="h-full border-r border-gray-200 flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-gray-200">
-              <h1 className="text-xl font-semibold mb-3">Messages</h1>
+          <div className="h-full border-r border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <h1 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Messages</h1>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4" />
                 <Input
                   placeholder="Search children..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 bg-gray-50 border-0"
+                  className="pl-9 bg-gray-50 dark:bg-gray-800 border-0 text-gray-900 dark:text-white"
                 />
               </div>
             </div>
@@ -311,10 +311,10 @@ export default function InboxPage() {
                   filteredChildren.map((child) => (
                     <Card
                       key={String(child.id)}
-                      className={`p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors border-0 ${
+                      className={`p-3 mb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border-0 ${
                         selectedChild &&
                         String(selectedChild.id) === String(child.id)
-                          ? "bg-blue-50 border-l-4 border-l-blue-500"
+                          ? "bg-blue-50 dark:bg-blue-900/30 border-l-4 border-l-blue-500"
                           : ""
                       }`}
                       onClick={async () => {
@@ -358,15 +358,15 @@ export default function InboxPage() {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <p className="font-medium text-gray-900 truncate flex-1 mr-2">
+                            <p className="font-medium text-gray-900 dark:text-white truncate flex-1 mr-2">
                               {child.name ?? "Unknown"}
                             </p>
-                            <span className="text-xs text-gray-500 whitespace-nowrap">
+                            <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                               {child.timestamp ?? ""}
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <p className="text-sm text-gray-600 truncate flex-1 mr-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-300 truncate flex-1 mr-2">
                               {child.lastMessage ?? ""}
                             </p>
                             {Number(child.unread) > 0 && (
@@ -375,7 +375,7 @@ export default function InboxPage() {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             Age {child.age ?? "?"} • {child.location ?? "?"}
                           </p>
                         </div>
@@ -383,7 +383,7 @@ export default function InboxPage() {
                     </Card>
                   ))
                 ) : (
-                  <p className="text-center text-gray-500 mt-10">
+                  <p className="text-center text-gray-500 dark:text-gray-400 mt-10">
                     No children linked to your account.
                   </p>
                 )}
@@ -398,7 +398,7 @@ export default function InboxPage() {
           {selectedChild ? (
             <div className="h-full flex flex-col">
               {/* Chat Header */}
-              <div className="p-4 border-b border-gray-200 bg-white flex-shrink-0">
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="relative">
@@ -412,10 +412,10 @@ export default function InboxPage() {
                       </Avatar>
                     </div>
                     <div>
-                      <h2 className="font-semibold text-gray-900">
+                      <h2 className="font-semibold text-gray-900 dark:text-white">
                         {selectedChild?.name ?? "Unnamed"}
                       </h2>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {selectedChild?.online
                           ? "Active now"
                           : `Age ${selectedChild?.age ?? "?"} • ${
@@ -441,8 +441,8 @@ export default function InboxPage() {
                       {/* Journal Image */}
                       <div className="flex justify-start">
                         <div className="max-w-xs lg:max-w-md">
-                          <div className="bg-gray-100 p-3 rounded-2xl">
-                            <p className="text-sm text-gray-900 mb-2 font-bold">
+                          <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-2xl">
+                            <p className="text-sm text-gray-900 dark:text-white mb-2 font-bold">
                               📝 New journal entry
                             </p>
                             {n.journal_image ? (
@@ -456,11 +456,11 @@ export default function InboxPage() {
                                 }}
                               />
                             ) : (
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
                                 No image available
                               </p>
                             )}
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                               Journal Entry Image
                             </p>
                           </div>
@@ -470,12 +470,12 @@ export default function InboxPage() {
                       {/* Learning Report */}
                       <div className="flex justify-start">
                         <div className="max-w-xs lg:max-w-md">
-                          <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl">
+                          <div className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white p-4 rounded-2xl">
                             <div className="mb-3">
-                              <p className="text-sm text-gray-900 mb-2 font-bold">
+                              <p className="text-sm text-gray-900 dark:text-white mb-2 font-bold">
                                 📊 Learning Progress Report
                               </p>
-                              <p className="text-lg font-bold text-blue-600">
+                              <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
                                 Overall Score:{" "}
                                 {n.learning_report?.overall_score ?? "N/A"}/5
                               </p>
@@ -486,7 +486,7 @@ export default function InboxPage() {
                                 <p className="text-xs font-medium mb-1">
                                   Progress Update:
                                 </p>
-                                <p className="text-sm bg-gray-200 p-2 rounded">
+                                <p className="text-sm bg-gray-200 dark:bg-gray-600 p-2 rounded">
                                   {n.learning_report.progress_update}
                                 </p>
                               </div>
@@ -497,7 +497,7 @@ export default function InboxPage() {
                                 <p className="text-xs font-medium mb-1">
                                   Teacher&apos;s Report:
                                 </p>
-                                <p className="text-sm bg-gray-200 p-2 rounded">
+                                <p className="text-sm bg-gray-200 dark:bg-gray-600 p-2 rounded">
                                   {n.learning_report.updated_report}
                                 </p>
                               </div>
@@ -505,7 +505,7 @@ export default function InboxPage() {
 
                             {n.learning_report?.scores && (
                               <details className="mb-3">
-                                <summary className="text-xs font-medium cursor-pointer hover:text-gray-700">
+                                <summary className="text-xs font-medium cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
                                   View Detailed Scores
                                 </summary>
                                 <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
@@ -513,7 +513,7 @@ export default function InboxPage() {
                                     ([skill, score]) => (
                                       <div
                                         key={skill}
-                                        className="flex justify-between bg-gray-200 p-1 rounded"
+                                        className="flex justify-between bg-gray-200 dark:bg-gray-600 p-1 rounded"
                                       >
                                         <span className="truncate">
                                           {skill}:
@@ -528,7 +528,7 @@ export default function InboxPage() {
                               </details>
                             )}
 
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               Learning Report
                             </p>
                           </div>
@@ -540,7 +540,7 @@ export default function InboxPage() {
               </ScrollArea>
 
               {/* Composer */}
-              <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
                     <Input
@@ -552,14 +552,14 @@ export default function InboxPage() {
                       onKeyDown={(e) => {
                         if (e.key === "Enter") handleSendMessage();
                       }}
-                      className="pr-12 rounded-full border-gray-300 focus:border-blue-500"
+                      className="pr-12 rounded-full border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     />
                     <Button
                       size="sm"
                       variant="ghost"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full p-0"
                     >
-                      <Heart className="h-4 w-4 text-gray-400" />
+                      <Heart className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     </Button>
                   </div>
                   <Button
@@ -574,7 +574,7 @@ export default function InboxPage() {
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-gray-500">Select a child to view messages</p>
+              <p className="text-gray-500 dark:text-gray-400">Select a child to view messages</p>
             </div>
           )}
         </ResizablePanel>

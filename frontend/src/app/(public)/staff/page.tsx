@@ -14,7 +14,7 @@ export default function StaffAuthPage() {
   const message = searchParams?.get('message');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="min-h-screen flex">
         {/* Left Side - Auth Form */}
         <div className="flex-1 flex items-center justify-center px-6 py-12">
@@ -30,27 +30,27 @@ export default function StaffAuthPage() {
                   className="h-12 w-auto"
                 />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 {isLogin ? "Staff Portal" : "Join Our Team"}
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {isLogin ? "Access your staff dashboard" : "Register as a staff member"}
               </p>
             </div>
 
             {/* Auth Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
               {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
                 </div>
               )}
               
               {message && (
-                <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <p className="text-green-700 text-sm font-medium">{message}</p>
+                <div className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <p className="text-green-700 dark:text-green-300 text-sm font-medium">{message}</p>
                 </div>
               )}
 
@@ -58,19 +58,19 @@ export default function StaffAuthPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Staff Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
                       placeholder="Enter your staff email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
                 </div>
@@ -78,26 +78,26 @@ export default function StaffAuthPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="password"
                       name="password"
                       type="password"
                       required
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
                 </div>
 
                 <button
                   formAction={isLogin ? staffLogin : staffSignup}
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 focus:outline-none transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors flex items-center justify-center gap-2"
                 >
                   {isLogin ? "Sign In" : "Create Staff Account"}
                   {isLogin ? <ArrowRight className="h-5 w-5" /> : <UserCheck className="h-5 w-5" />}
@@ -105,12 +105,12 @@ export default function StaffAuthPage() {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   {isLogin ? "New staff member?" : "Already have an account?"}{" "}
                   <button
                     type="button"
                     onClick={() => setIsLogin(!isLogin)}
-                    className="text-red-600 hover:text-red-700 font-semibold"
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-semibold"
                   >
                     {isLogin ? "Register here" : "Sign in here"}
                   </button>
@@ -120,7 +120,7 @@ export default function StaffAuthPage() {
               <div className="mt-6 text-center">
                 <Link 
                   href="/login" 
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   ← Back to donor login
                 </Link>

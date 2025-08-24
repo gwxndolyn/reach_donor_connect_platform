@@ -100,8 +100,8 @@ export default function UploadNotes() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
-      <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="w-full">
+      <div className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="text-center mb-8">
@@ -110,37 +110,37 @@ export default function UploadNotes() {
                 <Upload className="h-8 w-8 text-white" />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Upload Student Notes
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Share progress reports and updates with donors
             </p>
           </div>
 
           {/* Upload Form */}
-          <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
             {message && (
               <div className={`mb-6 border rounded-lg p-4 flex items-center gap-3 ${
                 message.includes("✅") 
-                  ? "bg-green-50 border-green-200" 
+                  ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700" 
                   : message.includes("❌")
-                  ? "bg-red-50 border-red-200"
-                  : "bg-blue-50 border-blue-200"
+                  ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700"
+                  : "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700"
               }`}>
                 {message.includes("✅") ? (
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                 ) : message.includes("❌") ? (
-                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" />
                 ) : (
-                  <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                  <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                 )}
                 <p className={`text-sm font-medium ${
                   message.includes("✅") 
-                    ? "text-green-700" 
+                    ? "text-green-700 dark:text-green-300" 
                     : message.includes("❌")
-                    ? "text-red-700"
-                    : "text-blue-700"
+                    ? "text-red-700 dark:text-red-300"
+                    : "text-blue-700 dark:text-blue-300"
                 }`}>
                   {message.replace(/[✅❌]/g, '').trim()}
                 </p>
@@ -150,13 +150,13 @@ export default function UploadNotes() {
             <form className="space-y-6" onSubmit={handleUpload}>
               {/* Student Selector */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   Select Student
                 </label>
                 <div className="relative">
-                  <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                   <select
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     value={selectedStudent}
                     onChange={(e) => setSelectedStudent(e.target.value)}
                     disabled={loadingStudents}
@@ -175,13 +175,13 @@ export default function UploadNotes() {
 
               {/* Journal Topic Selector */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   Select Journal Topic
                 </label>
                 <div className="relative">
-                  <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                   <select
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     value={selectedJournalTopic}
                     onChange={(e) => setSelectedJournalTopic(e.target.value)}
                   >
@@ -197,23 +197,23 @@ export default function UploadNotes() {
 
               {/* File Upload */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   Upload File
                 </label>
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-red-400 hover:bg-red-50 transition-colors cursor-pointer"
+                  className="w-full p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-red-400 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                 >
                   <div className="text-center">
-                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-sm text-gray-600 mb-2">
+                    <FileText className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
                       {file ? (
-                        <span className="text-red-600 font-medium">{file.name}</span>
+                        <span className="text-red-600 dark:text-red-400 font-medium">{file.name}</span>
                       ) : (
                         "Click to select a file or drag and drop"
                       )}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       PNG, JPG, JPEG, PDF up to 10MB
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export default function UploadNotes() {
               <button
                 type="submit"
                 disabled={uploading || loadingStudents || !selectedStudent || !file}
-                className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-pink-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-800 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {uploading ? (
                   <>
@@ -250,7 +250,7 @@ export default function UploadNotes() {
 
           {/* Help Text */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Upload progress reports, photos, or documents to keep donors informed about their sponsored students.
             </p>
           </div>

@@ -8,7 +8,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
   const success = searchParams?.success;
   const email = searchParams?.email;
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="min-h-screen flex">
         {/* Left Side - Hero Content */}
         <div className="hidden lg:flex flex-1 relative bg-gradient-to-br from-blue-600 to-indigo-700">
@@ -77,39 +77,39 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                   className="h-12 w-auto"
                 />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 Create Your Account
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Start your journey of making a difference today
               </p>
             </div>
 
             {/* Signup Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
               {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
                 </div>
               )}
               
               {success && email && (
-                <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-6">
+                <div className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                    <h3 className="text-lg font-semibold text-green-900">Check Your Email!</h3>
+                    <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">Check Your Email!</h3>
                   </div>
-                  <p className="text-green-700 text-sm mb-3">
+                  <p className="text-green-700 dark:text-green-300 text-sm mb-3">
                     We've sent a confirmation email to <strong>{email}</strong>
                   </p>
-                  <p className="text-green-600 text-sm">
+                  <p className="text-green-600 dark:text-green-400 text-sm">
                     Please click the link in the email to verify your account and complete your signup.
                   </p>
-                  <div className="mt-4 pt-4 border-t border-green-200">
+                  <div className="mt-4 pt-4 border-t border-green-200 dark:border-green-700">
                     <Link 
                       href="/login"
-                      className="text-green-700 hover:text-green-800 font-medium text-sm underline"
+                      className="text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 font-medium text-sm underline"
                     >
                       Already confirmed? Sign in here →
                     </Link>
@@ -122,19 +122,19 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
                 </div>
@@ -142,22 +142,22 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"
                   >
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="password"
                       name="password"
                       type="password"
                       required
                       placeholder="Create a strong password"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Password must be at least 6 characters long
                   </p>
                 </div>
@@ -167,15 +167,15 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                     id="terms" 
                     type="checkbox" 
                     required
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" 
+                    className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400" 
                   />
-                  <label htmlFor="terms" className="ml-3 text-sm text-gray-600">
+                  <label htmlFor="terms" className="ml-3 text-sm text-gray-600 dark:text-gray-300">
                     I agree to the{" "}
-                    <Link href="/terms" className="text-blue-600 hover:text-blue-700 underline">
+                    <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline">
                       Terms of Service
                     </Link>
                     {" "}and{" "}
-                    <Link href="/privacy" className="text-blue-600 hover:text-blue-700 underline">
+                    <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline">
                       Privacy Policy
                     </Link>
                   </label>
@@ -183,7 +183,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
 
                   <button
                     formAction={signup}
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
                   >
                     Create Account
                     <ArrowRight className="h-5 w-5" />
@@ -192,11 +192,11 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
               )}
 
               <div className="mt-8 text-center">
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   Already have an account?{" "}
                   <Link 
                     href="/login" 
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold"
                   >
                     Sign in here
                   </Link>
@@ -205,9 +205,9 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
             </div>
 
             {/* Security Note */}
-            <div className="mt-8 bg-gray-50 p-4 rounded-xl border border-gray-200">
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <Shield className="h-5 w-5 text-green-600 flex-shrink-0" />
+            <div className="mt-8 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                <Shield className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                 <p>
                   Your information is encrypted and secure. We never share your personal data 
                   and you can delete your account at any time.
@@ -217,8 +217,8 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
 
             {/* Social Proof */}
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500 mb-4">Join 500+ donors making a difference</p>
-              <div className="flex items-center justify-center gap-6 text-xs text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Join 500+ donors making a difference</p>
+              <div className="flex items-center justify-center gap-6 text-xs text-gray-400 dark:text-gray-500">
                 <span className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   Secure & Private

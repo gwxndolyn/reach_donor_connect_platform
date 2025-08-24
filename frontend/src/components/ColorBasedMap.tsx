@@ -272,9 +272,9 @@ export const ColorBasedMap = ({ className = "", regionCounts, referralCounts }: 
             top: tooltipPosition.y - 10,
           }}
         >
-          <div className="bg-white text-tooltip-text px-4 py-3 rounded-lg shadow-lg border border-map-border animate-fade-in">
+          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 animate-fade-in">
             <div className="text-sm font-semibold">{hoveredRegion.name}</div>
-            <div className="text-xs opacity-90 mt-1 max-w-48">
+            <div className="text-xs text-gray-600 dark:text-gray-300 mt-1 max-w-48">
               {(() => {
                 const id = hoveredRegion.id;
                 const donors = Number(regionCounts?.[id] ?? 0);
@@ -293,7 +293,7 @@ export const ColorBasedMap = ({ className = "", regionCounts, referralCounts }: 
             </div>
           </div>
           <div className="absolute left-1/2 transform -translate-x-1/2 top-full">
-            <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-tooltip-bg"></div>
+            <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white dark:border-t-gray-800"></div>
           </div>
         </div>
       )}

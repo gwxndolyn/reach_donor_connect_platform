@@ -23,7 +23,7 @@ export default async function PrivatePage() {
 
   return (
     <>
-      <div className="w-full bg-white rounded-2xl">
+      <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
         <div className="flex items-center gap-8 h-full">
           {/* Image on the left - takes up half the page */}
           <div className="w-7/8">
@@ -39,14 +39,14 @@ export default async function PrivatePage() {
 
           {/* Text on the right - takes up the other half */}
           <div className="w-1/2 text-left">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
               Welcome to DonorConnect
             </h1>
 
-            <p className="text-lg text-gray-800 px-1">
+            <p className="text-lg text-gray-800 dark:text-gray-200 px-1">
               Connecting you directly to our children.
             </p>
-            <p className="text-lg text-gray-800 px-1">
+            <p className="text-lg text-gray-800 dark:text-gray-200 px-1">
               Showing you the impact of your donations and how they change
               lives.
             </p>

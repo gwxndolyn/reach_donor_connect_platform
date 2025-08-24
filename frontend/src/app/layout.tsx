@@ -6,6 +6,7 @@ import { NavigationMenuDemo } from "@/components/navbar";
 import { StaffNavbar } from "@/components/staff-navbar";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
+import { ThemeProvider } from "@/contexts/theme-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,17 +57,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-        {/* Navbar - only show for donors, not staff */}
-        {showNavbar && !isStaff && (
-          <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-            <div className="container mx-auto px-4">
-              <NavigationMenuDemo />
-            </div>
-          </nav>
-        )}
+        <ThemeProvider>
+          {/* Navbar - only show for donors, not staff */}
+          {showNavbar && !isStaff && (
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="container mx-auto px-4">
+                <NavigationMenuDemo />
+              </div>
+            </nav>)}
 
           <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

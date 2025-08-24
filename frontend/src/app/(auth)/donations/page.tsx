@@ -106,47 +106,47 @@ export default async function DonationsPage() {
   const displayMonthly = donations && donations.length > 0 ? monthlyTotal : 50;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 pt-20">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 pt-20">My Donations</h1>
-          <p className="text-gray-600">Track your giving history and impact</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 pt-20">My Donations</h1>
+          <p className="text-gray-600 dark:text-gray-300">Track your giving history and impact</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              <span className="text-sm text-gray-500">All time</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">All time</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">${displayTotal}</h3>
-            <p className="text-sm text-gray-600">Total donated</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">${displayTotal}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Total donated</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="text-sm text-gray-500">This month</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">This month</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">${displayMonthly}</h3>
-            <p className="text-sm text-gray-600">Monthly total</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">${displayMonthly}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Monthly total</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
-              <span className="text-sm text-gray-500">Impact</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Impact</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">{displayDonations.length}</h3>
-            <p className="text-sm text-gray-600">Children supported</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{displayDonations.length}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Children supported</p>
           </div>
         </div>
 
@@ -162,14 +162,14 @@ export default async function DonationsPage() {
         </div>
 
         {/* Donations History */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-xl font-semibold text-gray-900">Donation History</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Donation History</h2>
           </div>
           
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {displayDonations.map((donation, index) => (
-              <div key={donation.id || index} className="p-6 hover:bg-gray-50 transition-colors">
+              <div key={donation.id || index} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     {/* Child Photo */}
@@ -186,18 +186,18 @@ export default async function DonationsPage() {
                     {/* Donation Details */}
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
                           ${donation.amount} donation
                         </h3>
                         <span className={`px-2 py-1 text-xs rounded-full ${
                           donation.donation_type === 'monthly' 
-                            ? 'bg-blue-100 text-blue-700' 
-                            : 'bg-green-100 text-green-700'
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                            : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
                         }`}>
                           {donation.donation_type === 'monthly' ? 'Monthly' : 'One-time'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                         <span>To: {donation.children?.name}</span>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -215,10 +215,10 @@ export default async function DonationsPage() {
                   <div className="text-right">
                     <span className={`px-3 py-1 text-sm rounded-full ${
                       donation.status === 'completed' 
-                        ? 'bg-green-100 text-green-700' 
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' 
                         : donation.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : 'bg-gray-100 text-gray-700'
+                        ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                     }`}>
                       {donation.status || 'completed'}
                     </span>
@@ -230,9 +230,9 @@ export default async function DonationsPage() {
 
           {displayDonations.length === 0 && (
             <div className="p-12 text-center">
-              <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No donations yet</h3>
-              <p className="text-gray-600 mb-6">Start making a difference by supporting a child in need</p>
+              <Heart className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No donations yet</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">Start making a difference by supporting a child in need</p>
               <Link
                 href="/donations/new"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition-colors"
