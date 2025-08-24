@@ -201,7 +201,7 @@ export default function AvatarAssetPicker({
 
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen">
-      <h1 className="text-4xl text-start font-bold mb-16 text-gray-900 dark:text-white">
+      <h1 className="text-4xl text-start font-bold mt-8 text-gray-900 dark:text-white">
         Customize Avatar
       </h1>
       <div
