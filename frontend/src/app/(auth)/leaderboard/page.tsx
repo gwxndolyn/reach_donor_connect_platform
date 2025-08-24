@@ -44,8 +44,8 @@ export default async function PrivatePage() {
   }
 
   // --- Fetch total donor counts per region using the SQL function ---
-  const { data: regionCountsData, error: regionCountsError } = await supabase
-    .rpc("get_donor_counts"); // <-- your server-side SQL function
+  const { data: regionCountsData, error: regionCountsError } =
+    await supabase.rpc("get_donor_counts"); // <-- your server-side SQL function
 
   if (regionCountsError) {
     console.error("Error fetching region counts:", regionCountsError);
@@ -58,8 +58,8 @@ export default async function PrivatePage() {
   });
 
   // --- Fetch referral counts per region ---
-  const { data: referralCountsData, error: referralCountsError } = await supabase
-    .rpc("get_referral_counts"); // returns table(region text, referrals bigint)
+  const { data: referralCountsData, error: referralCountsError } =
+    await supabase.rpc("get_referral_counts"); // returns table(region text, referrals bigint)
 
   if (referralCountsError) {
     console.error("Error fetching referral counts:", referralCountsError);
@@ -85,7 +85,9 @@ export default async function PrivatePage() {
 
       {/* --- Top 3 Leaderboard Table --- */}
       <div className="w-full bg-white rounded-2xl p-6 shadow-md">
-        <h2 className="text-xl font-bold mb-4 text-center">Top 3 Leaderboard</h2>
+          <h2 className="text-xl font-bold mb-4 text-center">
+            Top 3 Leaderboard
+          </h2>
         <div className="grid grid-cols-2 gap-8">
           {/* Total Donors */}
           <div className="px-4 flex flex-col items-center">
@@ -93,7 +95,9 @@ export default async function PrivatePage() {
             <ul className="divide-y divide-gray-200">
               {topDonors.map((row, idx) => (
                 <li key={idx} className="py-2 flex justify-between">
-                  <span className="font-bold">{idx + 1}. {regionDisplayMap[row.region]}</span>
+                    <span className="font-bold">
+                      {idx + 1}. {regionDisplayMap[row.region]}
+                    </span>
                   <span className="ml-20">{Number(row.count)}</span>
                 </li>
               ))}
@@ -105,7 +109,9 @@ export default async function PrivatePage() {
             <ul className="divide-y divide-gray-200">
               {topReferrals.map((row, idx) => (
                 <li key={idx} className="py-2 flex justify-between">
-                  <span className="font-bold">{idx + 1}. {regionDisplayMap[row.region]}</span>
+                    <span className="font-bold">
+                      {idx + 1}. {regionDisplayMap[row.region]}
+                    </span>
                   <span className="ml-20">{Number(row.referrals)}</span>
                 </li>
               ))}
@@ -117,11 +123,19 @@ export default async function PrivatePage() {
       <div className="w-full bg-white rounded-2xl p-6 shadow-md mt-6 flex flex-col items-center text-center">
         <div className="text-2xl font-large">
           <span className="font-bold">
-            {regionCountsData?.reduce((acc: number, row: { region: string; count: number }) => acc + Number(row.count), 0) ?? 0}
+              {regionCountsData?.reduce(
+                (acc: number, row: { region: string; count: number }) =>
+                  acc + Number(row.count),
+                0
+              ) ?? 0}
           </span>{" "}
           donors,{" "}
           <span className="font-bold">
-            {referralCountsData?.reduce((acc: number, row: { region: string; referrals: number }) => acc + Number(row.referrals), 0) ?? 0}
+              {referralCountsData?.reduce(
+                (acc: number, row: { region: string; referrals: number }) =>
+                  acc + Number(row.referrals),
+                0
+              ) ?? 0}
           </span>{" "}
           referrals and counting.
         </div>
