@@ -104,7 +104,7 @@ export default function UploadNotes() {
       <div className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mt-12 mb-8">
             <div className="flex items-center justify-center mb-4">
               <div className="p-3 bg-gradient-to-r from-red-500 to-pink-600 rounded-full">
                 <Upload className="h-8 w-8 text-white" />
