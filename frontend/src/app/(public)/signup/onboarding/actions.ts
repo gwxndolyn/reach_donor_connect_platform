@@ -34,7 +34,7 @@ export async function createDonor(formData: FormData) {
   if (donorError) return { ok: false, error: donorError.message };
   
 
-  redirect("/dashboard");
+  redirect("/home");
 
   return { ok: true, donor: donorData };
   

@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Heart, User, LogOut } from "lucide-react";
+import Image from "next/image";
+import { User, LogOut, Gift } from "lucide-react";
 import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -24,8 +25,13 @@ function Brand() {
         className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
         aria-label="Go to Homepage"
       >
-        <Heart className="h-6 w-6 text-red-500" />
-        <span className="text-xl font-bold text-gray-900">DonorConnect</span>
+        <Image
+          src="/logo.png"
+          alt="DonorConnect"
+          width={120}
+          height={40}
+          className="h-10 w-auto"
+        />
       </Link>
   );
 }
@@ -110,7 +116,7 @@ export function NavigationMenuDemo() {
                         href="/donations"
                         className="flex flex-row items-center space-x-2 w-full p-2 rounded-md hover:bg-accent text-left w-full"
                       >
-                        <Heart className="h-4 w-4" />
+                        <Gift className="h-4 w-4" />
                         <span>My Donations</span>
                       </Link>
                     </NavigationMenuLink>

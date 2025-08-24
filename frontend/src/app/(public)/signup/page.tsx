@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ArrowRight, Mail, Lock, User, Shield, Check, AlertCircle, CheckCircle } from "lucide-react";
+import { ArrowRight, Mail, Lock, User, Shield, Check, AlertCircle, CheckCircle } from "lucide-react";
 import { signup } from "./actions";
 
 export default function SignupPage({ searchParams }: { searchParams: { error?: string; success?: string; email?: string } }) {
@@ -68,9 +68,14 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-red-500" />
-                <span className="text-2xl font-bold text-gray-900">DonorConnect</span>
+              <div className="flex items-center justify-center mb-4">
+                <Image
+                  src="/logo.png"
+                  alt="DonorConnect"
+                  width={160}
+                  height={50}
+                  className="h-12 w-auto"
+                />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Create Your Account
@@ -129,7 +134,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                       type="email"
                       required
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors text-gray-900"
                     />
                   </div>
                 </div>
@@ -149,7 +154,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
                       type="password"
                       required
                       placeholder="Create a strong password"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors text-gray-900"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
@@ -178,7 +183,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
 
                   <button
                     formAction={signup}
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-800 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-colors !transform-none !scale-100 hover:!scale-100 active:!scale-100 flex items-center justify-center gap-2"
                   >
                     Create Account
                     <ArrowRight className="h-5 w-5" />
