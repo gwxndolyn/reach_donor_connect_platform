@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NavigationMenuDemo } from "@/components/navbar";
+import { StaffNavbar } from "@/components/staff-navbar";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 
@@ -38,13 +39,30 @@ export default async function RootLayout({
   // Only show navbar for authenticated users on protected pages
   const showNavbar = user !== null && !shouldHideNavbar;
 
+  // Check if user is staff (only if user exists and we should show navbar)
+  let isStaff = false;
+  if (user && showNavbar) {
+    const { data: staffData } = await supabase
+      .from("staff")
+      .select("*")
+      .eq("auth_uid", user.id)
+      .single();
+    isStaff = !!staffData;
+  }
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Floating navbar - only show for authenticated users on protected pages */}
-        {showNavbar && <NavigationMenuDemo />}
+        {/* Navbar - only show for donors, not staff */}
+        {showNavbar && !isStaff && (
+          <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+            <div className="container mx-auto px-4">
+              <NavigationMenuDemo />
+            </div>
+          </nav>
+        )}
 
         {/* Main content */}
         <main className="">{children}</main>
