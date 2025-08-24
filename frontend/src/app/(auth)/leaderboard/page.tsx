@@ -90,8 +90,8 @@ export default async function LeaderboardPage() {
   });
 
   const referralCountMap: Record<string, number> = {};
-  referralCountsData?.forEach((row: { region: string; count: number }) => {
-    referralCountMap[row.region] = Number(row.count);
+  (referralCountsData ?? []).forEach((row: { region: string; referrals: number }) => {
+    referralCountMap[row.region] = Number(row.referrals) || 0;
   });
 
   // Compute Top 3 for each category
@@ -102,6 +102,35 @@ export default async function LeaderboardPage() {
   const topReferrals = [...(referralCountsData || [])]
     .sort((a, b) => Number(b.referrals) - Number(a.referrals))
     .slice(0, 3);
+
+  // My region from the logged-in donor
+  const myRegion = DonorData.region as string;
+
+  // ---- RPC: Top Donors in My Region ----
+  type TopNameRow = { name: string | null; anonymous: boolean | null };
+
+  const { data: topDonorsInMyRegion, error: donorsInRegionError } = await supabase
+    .rpc("get_top_donors_in_region", { p_region: myRegion, p_limit: 3 }) as {
+      data: TopNameRow[] | null;
+      error: unknown;
+    };
+
+  if (donorsInRegionError) {
+    console.error("Error fetching donors in my region (rpc):", donorsInRegionError);
+  }
+
+  // ---- RPC: Top Referrers in My Region ----
+  type TopRefRow = { name: string | null; anonymous: boolean | null; number_of_referrals: number | null };
+
+  const { data: topReferrersInMyRegion, error: referrersInRegionError } = await supabase
+    .rpc("get_top_referrers_in_region", { p_region: myRegion, p_limit: 3 }) as {
+      data: TopRefRow[] | null;
+      error: unknown;
+    };
+
+  if (referrersInRegionError) {
+    console.error("Error fetching referrers in my region (rpc):", referrersInRegionError);
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -217,7 +246,70 @@ export default async function LeaderboardPage() {
               </div>
             </div>
           </div>
+
+          {/* --- My Region Leaderboard --- */}
+          <div className="p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Donors in My Region */}
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border border-yellow-200">
+                <div className="flex items-center gap-2 mb-4">
+                  <Users className="h-6 w-6 text-yellow-600" />
+                  <h3 className="text-xl font-bold text-yellow-900">Top Donors in My Region</h3>
+                </div>
+                <div className="space-y-3">
+                  {topDonorsInMyRegion && topDonorsInMyRegion.length > 0 ? topDonorsInMyRegion.map((row, idx) => {
+                    const displayName = row.anonymous ? "Anonymous" : (row.name?.trim() || "Anonymous");
+                    return (
+                      <div key={idx} className="flex items-center bg-white/60 backdrop-blur rounded-xl p-4 border border-yellow-200/50">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-yellow-800 bg-yellow-300">
+                            {idx + 1}
+                          </div>
+                          <span className="font-semibold text-gray-900">{displayName}</span>
+                        </div>
+                      </div>
+                    );
+                  }) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <p>No donors yet</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Referrers in My Region */}
+              <div className="bg-gradient-to-br from-red-50 to-rose-100 rounded-2xl p-6 border border-red-200">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="h-6 w-6 text-red-600" />
+                  <h3 className="text-xl font-bold text-red-900">Top Referrers in My Region</h3>
+                </div>
+                <div className="space-y-3">
+                  {topReferrersInMyRegion && topReferrersInMyRegion.length > 0 ? topReferrersInMyRegion.map((row, idx) => {
+                    const displayName = row.anonymous ? "Anonymous" : (row.name?.trim() || "Anonymous");
+                    return (
+                      <div key={idx} className="flex items-center bg-white/60 backdrop-blur rounded-xl p-4 border border-red-200/50">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-red-800 bg-red-300">
+                            {idx + 1}
+                          </div>
+                          <span className="font-semibold text-gray-900">{displayName}</span>
+                        </div>
+                      </div>
+                    );
+                  }) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <TrendingUp className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <p>No referrers yet</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        
 
         {/* Interactive Map */}
           <div className="px-8 py-6">
