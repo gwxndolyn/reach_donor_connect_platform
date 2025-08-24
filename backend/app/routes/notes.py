@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.services.ocr_service import extract_text_from_image_url
 from app.services.supabase_service import get_supabase_client
+from app.routes.student import submit_journal
+from app.models.schemas import JournalSubmission 
 
 router = APIRouter(prefix="/notes", tags=["notes"])
 
@@ -25,6 +27,14 @@ async def upload_note(request: NoteUploadRequest):
         }
 
         supabase.table("journal_entries").insert(payload).execute()
+
+        submission_payload = JournalSubmission(
+            student_id = request.student_id,
+            journal = extracted_text
+        )
+
+        submission_result = await submit_journal(submission_payload)
+        print(submission_result)
 
         return {
             "student_id": request.student_id,

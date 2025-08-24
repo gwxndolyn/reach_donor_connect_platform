@@ -46,30 +46,30 @@ class LLMClass:
         }
 
         return f"""
-You are an educational language assessor.
+        You are an educational language assessor.
 
-You will receive:
-- A new journal entry from a child
-- The previous learning report (or None)
+        You will receive:
+        - A new journal entry from a child
+        - The previous learning report (or None)
 
-Your tasks:
-1. Score the journal in each of the 13 categories (1–5 scale)
-2. Provide the average overall score (1 decimal)
-3. Compare the new journal to the previous report and describe improvements or regressions
-4. Write a donor-friendly summary of this submission
+        Your tasks:
+        1. Score the journal in each of the 13 categories (1–5 scale)
+        2. Provide the average overall score (1 decimal)
+        3. Compare the new journal to the previous report and describe improvements or regressions
+        4. Write a donor-friendly summary of this submission
 
-Scoring Categories:
-{categories}
+        Scoring Categories:
+        {categories}
 
-New Journal Entry:
-{new_entry}
+        New Journal Entry:
+        {new_entry}
 
-Previous Report:
-{prev}
+        Previous Report:
+        {prev}
 
-Output format (must follow this JSON structure):
-{json.dumps(output_format, indent=2)}
-""".strip()
+        Output format (must follow this JSON structure):
+        {json.dumps(output_format, indent=2)}
+        """.strip()
 
     def get_updated_learning_report(
         self, new_journal: str, previous_report: Optional[dict] = None
