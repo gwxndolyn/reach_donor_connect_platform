@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { Upload, FileText, Users, CheckCircle, AlertCircle, ArrowUp } from "lucide-react";
+import { Upload, FileText, Users, CheckCircle, AlertCircle, ArrowUp, MessageSquare } from "lucide-react";
 import { uploadNotes, getStudents } from "./actions";
 
 const journalTopics = [
@@ -148,46 +147,6 @@ export default function UploadNotes() {
               </div>
             )}
 
-            {/* Journal Topic Selector */}
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Select Journal Topic
-              </label>
-              <select
-                className="w-full border rounded-md p-2 text-sm"
-                value={selectedJournalTopic}
-                onChange={(e) => setSelectedJournalTopic(e.target.value)}
-              >
-                <option value="">Choose a journal topic</option>
-                {journalTopics.map((topic, index) => (
-                  <option key={index} value={topic}>
-                    {topic}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* File Upload */}
-            <div className="flex items-center space-x-3">
-              <Button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2"
-              >
-                {file ? "Change File" : "Upload File"}
-              </Button>
-              <span className="text-sm text-gray-700">
-                {file ? file.name : "No file selected"}
-              </span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".png,.jpg,.jpeg,.pdf"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-              />
-            </div>
-
             <form className="space-y-6" onSubmit={handleUpload}>
               {/* Student Selector */}
               <div>
@@ -208,6 +167,28 @@ export default function UploadNotes() {
                     {students.map((student) => (
                       <option key={student.student_id} value={student.student_id}>
                         {student.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Journal Topic Selector */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select Journal Topic
+                </label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <select
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-colors text-gray-900"
+                    value={selectedJournalTopic}
+                    onChange={(e) => setSelectedJournalTopic(e.target.value)}
+                  >
+                    <option value="">Choose a journal topic</option>
+                    {journalTopics.map((topic, index) => (
+                      <option key={index} value={topic}>
+                        {topic}
                       </option>
                     ))}
                   </select>
