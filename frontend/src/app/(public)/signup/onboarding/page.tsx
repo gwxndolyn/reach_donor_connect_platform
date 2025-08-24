@@ -131,7 +131,7 @@ export default function OnboardingPage() {
                 if (!res.ok) {
                   setError(res.error || "Something went wrong.");
                 } else {
-                  setSuccessName(res.donor?.name ?? "Donor");
+                  setSuccessName((res.donor as { name?: string })?.name ?? "Donor");
                 }
               });
             }}
