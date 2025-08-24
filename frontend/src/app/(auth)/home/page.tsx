@@ -155,7 +155,7 @@ export default async function HomePage() {
       name: "Alex",
       age: 9,
       location: "Sai Kung 西貢",
-      image: "/image1.webp",
+      image: "/image2.webp",
       progress: "Just completed Grade 2",
       totalDonated: "$450",
     },
