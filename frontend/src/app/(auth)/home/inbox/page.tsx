@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -14,23 +15,39 @@ import {
 import { Search, Send, MoreVertical, Heart } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
+type Child = {
+  id: string | number;
+  name?: string;
+  age?: number;
+  location?: string;
+  unread?: number;
+  timestamp?: string;
+  lastMessage?: string;
+  online?: boolean;
+};
+
+type NotificationItem = {
+  journal_image?: string | null;
+  learning_report?: {
+    overall_score?: number | string;
+    progress_update?: string;
+    updated_report?: string;
+    scores?: Record<string, number | string>;
+  } | null;
+};
+
 export default function InboxPage() {
-  const [children, setChildren] = useState<any[]>([]);
-  const [selectedChild, setSelectedChild] = useState<any | null>(null);
+  const [children, setChildren] = useState<Child[]>([]);
+  const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [donorId, setDonorId] = useState<string | null>(null);
   const [hasScrolledToRead, setHasScrolledToRead] = useState(false);
 
-  // Initialize authentication and get donor ID
+  // Initialize authentication and donorId
   useEffect(() => {
     const initAuth = async () => {
-      console.log(
-        "API URL environment variable:",
-        process.env.NEXT_PUBLIC_API_URL
-      );
-
       const supabase = createClient();
       const { data: AuthData, error: AuthError } =
         await supabase.auth.getUser();
@@ -41,63 +58,83 @@ export default function InboxPage() {
         return;
       }
 
-      console.log("Authenticated user:", AuthData.user);
-
-      // Get the actual donor ID from the database using the Supabase user ID
       try {
-        const response = await fetch(
+        const resp = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/donor/get_donor_id_by_supabase_id/${AuthData.user.id}`
         );
 
-        if (response.ok) {
-          const donorData = await response.json();
-          console.log("Donor data from DB:", donorData[0].id);
-          setDonorId(donorData[0].id);
+        if (resp.ok) {
+          const donorData = await resp.json();
+          // Expecting an array; take first row id
+          const id = donorData?.[0]?.id;
+          if (id !== undefined && id !== null) {
+            setDonorId(String(id));
+          } else {
+            // Fallback to Supabase user id as string
+            setDonorId(String(AuthData.user.id));
+          }
         } else {
-          // Fallback: try using the Supabase user ID directly
-          console.log("Fallback: using Supabase user ID as donor ID");
-          setDonorId(AuthData.user.id);
+          // Fallback to Supabase user id as string
+          setDonorId(String(AuthData.user.id));
         }
-      } catch (error) {
-        console.error("Error fetching donor ID:", error);
-        // Fallback: try using the Supabase user ID directly
-        console.log("Fallback: using Supabase user ID as donor ID");
-        setDonorId(AuthData.user.id);
+      } catch (e) {
+        console.error("Error fetching donor ID:", e);
+        setDonorId(String(AuthData.user.id));
       }
     };
 
     initAuth();
   }, []);
 
+  // Fetch children for donor and attach unread counts
   useEffect(() => {
     const fetchChildren = async () => {
       if (!donorId) return;
-      console.log("Fetching children for donor:", donorId);
 
       try {
-        // Use the backend API instead of direct Supabase calls
         const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/donor/get_all_children/${donorId}`;
-        console.log("API URL:", apiUrl);
-
         const response = await fetch(apiUrl);
-
-        console.log("Response status:", response.status);
-        console.log("Response ok:", response.ok);
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error("API Error:", response.status, errorText);
-          throw new Error(
-            `Failed to fetch children: ${response.status} - ${errorText}`
+          console.error(
+            "Failed to fetch children:",
+            response.status,
+            errorText
           );
+          setChildren([]);
+          setSelectedChild(null);
+          return;
         }
 
-        const data = await response.json();
-        console.log("Fetched children data:", data);
+        const data: Child[] = await response.json();
 
         if (data && data.length > 0) {
-          setChildren(data);
-          setSelectedChild(data[0]);
+          // Attach unread counts per child
+          const withUnread = await Promise.all(
+            data.map(async (child) => {
+              try {
+                const unreadResp = await fetch(
+                  `${process.env.NEXT_PUBLIC_API_URL}/donor/unread_count/${donorId}/${child.id}`
+                );
+
+                if (!unreadResp.ok) {
+                  return { ...child, unread: child.unread ?? 0 };
+                }
+
+                const unreadJson = await unreadResp.json();
+                return {
+                  ...child,
+                  unread: Number(unreadJson.unread_count || 0),
+                };
+              } catch {
+                return { ...child, unread: child.unread ?? 0 };
+              }
+            })
+          );
+
+          setChildren(withUnread);
+          setSelectedChild(withUnread[0] ?? null);
         } else {
           setChildren([]);
           setSelectedChild(null);
@@ -113,35 +150,25 @@ export default function InboxPage() {
   }, [donorId]);
 
   const filteredChildren = children.filter((child) =>
-    child.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    (child.name ?? "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const callBackendAPI = async (donorId: string, studentId: string) => {
+  // Fetch notifications for a student
+  const callBackendAPI = async (donorIdStr: string, studentIdStr: string) => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/donor/get_all_notifications/${donorId}/${studentId}`;
-      console.log("Fetching notifications from:", apiUrl);
-
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/donor/get_all_notifications/${donorIdStr}/${studentIdStr}`;
       const response = await fetch(apiUrl);
-
-      console.log("Notifications response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Notifications API Error:", response.status, errorText);
-        throw new Error(
-          `Failed to fetch notifications: ${response.status} - ${errorText}`
-        );
+        setNotifications([]);
+        return [];
       }
 
-      const data = await response.json();
-      if (data && data.length > 0) {
-        console.log("Fetched notifications:", data);
-        setNotifications(data);
-      } else {
-        console.log("No notifications found");
-        setNotifications([]);
-      }
-      return data;
+      const data: NotificationItem[] = await response.json();
+      setNotifications(data ?? []);
+      return data ?? [];
     } catch (error) {
       console.error("Error fetching notifications:", error);
       setNotifications([]);
@@ -149,55 +176,108 @@ export default function InboxPage() {
     }
   };
 
-  const markNotificationsAsRead = async (donorId: string, studentId: string) => {
+  // Mark notifications as read for a student and update badge
+  const markNotificationsAsRead = async (
+    donorIdStr: string,
+    studentIdStr: string
+  ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/donor/mark_notifications_read/${donorId}/${studentId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/donor/mark_notifications_read/${donorIdStr}/${studentIdStr}`,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
         }
       );
+      if (!response.ok) return;
 
-      if (response.ok) {
-        console.log("Notifications marked as read");
-        // Update the children list to reflect the read status
-        setChildren(prevChildren => 
-          prevChildren.map(child => 
-            child.id.toString() === studentId 
-              ? { ...child, unread: 0 }
-              : child
-          )
+      // Verify once from backend (optional)
+      let newUnreadCount = 0;
+      try {
+        const unreadResp = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/donor/unread_count/${donorIdStr}/${studentIdStr}`
         );
+        if (unreadResp.ok) {
+          const unreadJson = await unreadResp.json();
+          newUnreadCount = Number(unreadJson.unread_count || 0);
+        }
+      } catch {
+        // keep 0 if verification fails
       }
+
+      setChildren((prev) =>
+        prev.map((c) =>
+          String(c.id) === String(studentIdStr)
+            ? { ...c, unread: newUnreadCount }
+            : c
+        )
+      );
+
+      setSelectedChild((prev) =>
+        prev && String(prev.id) === String(studentIdStr)
+          ? { ...prev, unread: newUnreadCount }
+          : prev
+      );
     } catch (error) {
       console.error("Error marking notifications as read:", error);
     }
   };
 
-  const handleMessageScroll = async (event: any) => {
-    const { scrollTop, scrollHeight, clientHeight } = event.target;
-    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-    
-    // If user has scrolled past 30% of messages and hasn't triggered this before
-    if (scrollPercentage > 0.3 && !hasScrolledToRead && selectedChild && donorId) {
+  // Scroll handler: mark as read when user scrolls near bottom (once)
+  const handleMessageScroll = async (
+    e: React.UIEvent<HTMLDivElement, UIEvent>
+  ) => {
+    const el = e.currentTarget;
+    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 24;
+
+    if (nearBottom && !hasScrolledToRead && selectedChild && donorId) {
       setHasScrolledToRead(true);
-      await markNotificationsAsRead(donorId.toString(), selectedChild.id.toString());
+      await markNotificationsAsRead(String(donorId), String(selectedChild.id));
     }
   };
 
-  // Reset scroll flag when changing conversations
+  // Reset the scroll-to-read flag when switching conversations
   useEffect(() => {
     setHasScrolledToRead(false);
   }, [selectedChild]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      console.log("Sending message:", newMessage);
-      setNewMessage("");
+  // Periodically refresh unread counts (every 30s)
+  const refreshUnreadCounts = async () => {
+    if (!donorId || children.length === 0) return;
+    try {
+      const updated = await Promise.all(
+        children.map(async (child) => {
+          try {
+            const unreadResp = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/donor/unread_count/${donorId}/${child.id}`
+            );
+            if (!unreadResp.ok) return child;
+            const json = await unreadResp.json();
+            return { ...child, unread: Number(json.unread_count || 0) };
+          } catch {
+            return child;
+          }
+        })
+      );
+      setChildren(updated);
+    } catch (e) {
+      console.error("refreshUnreadCounts error:", e);
     }
+  };
+
+  useEffect(() => {
+    if (!donorId) return;
+    const id = setInterval(() => {
+      // Only refresh if we already have children
+      if (children.length > 0) refreshUnreadCounts();
+    }, 30000);
+    return () => clearInterval(id);
+  }, [donorId, children.length]); // keep deps minimal to avoid churn
+
+  const handleSendMessage = () => {
+    if (!newMessage.trim()) return;
+    console.log("Sending message:", newMessage);
+    setNewMessage("");
   };
 
   return (
@@ -209,7 +289,7 @@ export default function InboxPage() {
             <div className="p-4 border-b border-gray-200">
               <h1 className="text-xl font-semibold mb-3">Messages</h1>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search children..."
                   value={searchQuery}
@@ -224,25 +304,36 @@ export default function InboxPage() {
                 {filteredChildren.length > 0 ? (
                   filteredChildren.map((child) => (
                     <Card
-                      key={child.id}
+                      key={String(child.id)}
                       className={`p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors border-0 ${
-                        selectedChild?.id === child.id
+                        selectedChild &&
+                        String(selectedChild.id) === String(child.id)
                           ? "bg-blue-50 border-l-4 border-l-blue-500"
                           : ""
                       }`}
                       onClick={async () => {
                         setSelectedChild(child);
+
+                        // Optimistic: clear unread locally on open
+                        setChildren((prev) =>
+                          prev.map((c) =>
+                            String(c.id) === String(child.id)
+                              ? { ...c, unread: 0 }
+                              : c
+                          )
+                        );
+
                         if (donorId) {
                           const fetched = await callBackendAPI(
-                            donorId.toString(),
-                            child.id.toString()
+                            String(donorId),
+                            String(child.id)
                           );
                           setNotifications(fetched);
-                          
-                          // Mark notifications as read when user opens the conversation
-                          await markNotificationsAsRead(
-                            donorId.toString(),
-                            child.id.toString()
+
+                          // Persist read state (no need to await for UX)
+                          markNotificationsAsRead(
+                            String(donorId),
+                            String(child.id)
                           );
                         }
                       }}
@@ -272,9 +363,9 @@ export default function InboxPage() {
                             <p className="text-sm text-gray-600 truncate flex-1 mr-2">
                               {child.lastMessage ?? ""}
                             </p>
-                            {child.unread > 0 && (
+                            {Number(child.unread) > 0 && (
                               <Badge className="bg-blue-500 text-white text-xs min-w-5 h-5 flex items-center justify-center rounded-full whitespace-nowrap">
-                                {child.unread}
+                                {Number(child.unread)}
                               </Badge>
                             )}
                           </div>
@@ -300,6 +391,7 @@ export default function InboxPage() {
         <ResizablePanel defaultSize={60}>
           {selectedChild ? (
             <div className="h-full flex flex-col overflow-hidden">
+              {/* Chat Header */}
               <div className="p-4 border-b border-gray-200 bg-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
@@ -332,86 +424,89 @@ export default function InboxPage() {
                 </div>
               </div>
 
-              <ScrollArea 
-                className="flex-1 p-4 overflow-y-auto max-h-full"
-                onScrollCapture={handleMessageScroll}
-              >
-                <div className="space-y-4 pb-4">
-                  {notifications.map((n, i) => (
-                    <div key={i} className="space-y-4">
-                      {/* Journal Image - from student */}
-                      <div className="flex justify-start">
-                        <div className="max-w-xs lg:max-w-md">
-                          <div className="bg-gray-100 p-3 rounded-2xl">
-                            <p className="text-sm text-gray-900 mb-2">
-                              📝 New journal entry
-                            </p>
-                            {n.journal_image ? (
-                              <img
-                                src={n.journal_image}
-                                alt="Journal entry"
-                                className="w-full h-auto rounded-lg"
-                                onError={(e) => {
-                                  e.currentTarget.src =
-                                    "/placeholder-image.png";
-                                }}
-                              />
-                            ) : (
-                              <p className="text-sm text-gray-500">
-                                No image available
+              {/* Messages */}
+              <ScrollArea className="flex-1">
+                <div
+                  className="flex-1 p-4 overflow-y-auto max-h-full"
+                  onScroll={handleMessageScroll}
+                >
+                  <div className="space-y-4 pb-4">
+                    {notifications.map((n, i) => (
+                      <div key={i} className="space-y-4">
+                        {/* Journal Image */}
+                        <div className="flex justify-start">
+                          <div className="max-w-xs lg:max-w-md">
+                            <div className="bg-gray-100 p-3 rounded-2xl">
+                              <p className="text-sm text-gray-900 mb-2 font-bold">
+                                📝 New journal entry
                               </p>
-                            )}
-                            <p className="text-xs text-gray-500 mt-2">
-                              Journal Image
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Learning Report - also from student */}
-                      <div className="flex justify-start">
-                        <div className="max-w-xs lg:max-w-md">
-                          <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl">
-                            <div className="mb-3">
-                              <p className="text-sm font-medium mb-1">
-                                📊 Learning Progress Report
-                              </p>
-                              <p className="text-lg font-bold text-blue-600">
-                                Overall Score:{" "}
-                                {n.learning_report?.overall_score || "N/A"}/5
+                              {n.journal_image ? (
+                                <img
+                                  src={n.journal_image}
+                                  alt="Journal entry"
+                                  className="w-full h-auto rounded-lg"
+                                  onError={(e) => {
+                                    (e.currentTarget as HTMLImageElement).src =
+                                      "/placeholder-image.png";
+                                  }}
+                                />
+                              ) : (
+                                <p className="text-sm text-gray-500">
+                                  No image available
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-500 mt-2">
+                                Journal Entry Image
                               </p>
                             </div>
+                          </div>
+                        </div>
 
-                            {n.learning_report?.progress_update && (
+                        {/* Learning Report */}
+                        <div className="flex justify-start">
+                          <div className="max-w-xs lg:max-w-md">
+                            <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl">
                               <div className="mb-3">
-                                <p className="text-xs font-medium mb-1">
-                                  Progress Update:
+                                <p className="text-sm text-gray-900 mb-2 font-bold">
+                                  📊 Learning Progress Report
                                 </p>
-                                <p className="text-sm bg-gray-200 p-2 rounded">
-                                  {n.learning_report.progress_update}
+                                <p className="text-lg font-bold text-blue-600">
+                                  Overall Score:{" "}
+                                  {n.learning_report?.overall_score ?? "N/A"}/5
                                 </p>
                               </div>
-                            )}
 
-                            {n.learning_report?.updated_report && (
-                              <div className="mb-3">
-                                <p className="text-xs font-medium mb-1">
-                                  Teacher's Report:
-                                </p>
-                                <p className="text-sm bg-gray-200 p-2 rounded">
-                                  {n.learning_report.updated_report}
-                                </p>
-                              </div>
-                            )}
+                              {n.learning_report?.progress_update && (
+                                <div className="mb-3">
+                                  <p className="text-xs font-medium mb-1">
+                                    Progress Update:
+                                  </p>
+                                  <p className="text-sm bg-gray-200 p-2 rounded">
+                                    {n.learning_report.progress_update}
+                                  </p>
+                                </div>
+                              )}
 
-                            {n.learning_report?.scores && (
-                              <details className="mb-3">
-                                <summary className="text-xs font-medium cursor-pointer hover:text-gray-700">
-                                  View Detailed Scores
-                                </summary>
-                                <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
-                                  {Object.entries(n.learning_report.scores).map(
-                                    ([skill, score]) => (
+                              {n.learning_report?.updated_report && (
+                                <div className="mb-3">
+                                  <p className="text-xs font-medium mb-1">
+                                    Teacher&apos;s Report:
+                                  </p>
+                                  <p className="text-sm bg-gray-200 p-2 rounded">
+                                    {n.learning_report.updated_report}
+                                  </p>
+                                </div>
+                              )}
+
+                              {n.learning_report?.scores && (
+                                <details className="mb-3">
+                                  <summary className="text-xs font-medium cursor-pointer hover:text-gray-700">
+                                    View Detailed Scores
+                                  </summary>
+                                  <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
+                                    {Object.entries(
+                                      n.learning_report.scores
+                                    ).map(([skill, score]) => (
                                       <div
                                         key={skill}
                                         className="flex justify-between bg-gray-200 p-1 rounded"
@@ -423,23 +518,24 @@ export default function InboxPage() {
                                           {String(score)}/5
                                         </span>
                                       </div>
-                                    )
-                                  )}
-                                </div>
-                              </details>
-                            )}
+                                    ))}
+                                  </div>
+                                </details>
+                              )}
 
-                            <p className="text-xs text-gray-500 mt-1">
-                              Learning Report
-                            </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Learning Report
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </ScrollArea>
 
+              {/* Composer */}
               <div className="p-4 border-t border-gray-200 bg-white">
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 relative">
@@ -449,15 +545,15 @@ export default function InboxPage() {
                       }...`}
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) =>
-                        e.key === "Enter" && handleSendMessage()
-                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSendMessage();
+                      }}
                       className="pr-12 rounded-full border-gray-300 focus:border-blue-500"
                     />
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 rounded-full p-0"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full p-0"
                     >
                       <Heart className="h-4 w-4 text-gray-400" />
                     </Button>

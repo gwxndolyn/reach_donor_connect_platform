@@ -5,7 +5,6 @@ import "./globals.css";
 import { NavigationMenuDemo } from "@/components/navbar";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
-import ClientProviders from "./context-provider"; // 👈 your client wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,9 +53,7 @@ export default async function RootLayout({
         )}
 
         {/* Client-only providers go here */}
-        <ClientProviders>
           <main>{children}</main>
-        </ClientProviders>
       </body>
     </html>
   );

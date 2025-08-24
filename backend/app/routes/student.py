@@ -13,7 +13,7 @@ linking_service = LinkingServiceClass()
 @router.post("/submit")
 async def submit_journal(payload: JournalSubmission):
     print("Received payload:", payload)
-    report = await lr.generate_learning_report(payload.student_id, payload.journal)
+    report = await lr.generate_learning_report(payload.student_id, payload.journal, payload.journal_topic)
     if report is None:
         raise HTTPException(status_code=500, detail="Report generation failed")
     
@@ -26,6 +26,7 @@ async def submit_journal(payload: JournalSubmission):
         student_id=payload.student_id,
         learning_report=resp_dict,
         image_url=payload.image_url,
+        journal_topic=payload.journal_topic
     )
     print("After calling notifier")
     return {"message": "Journal submitted and report generated.", "report": report}

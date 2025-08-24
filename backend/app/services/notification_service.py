@@ -13,6 +13,7 @@ class NotificationService:
         student_id: str,
         learning_report: dict,
         image_url: str,
+        journal_topic: str,
     ):
         try:
             donor_id = LinkingServiceClass.get_linked_donor_id(self, student_id)
@@ -21,8 +22,8 @@ class NotificationService:
                 donor_id=donor_id,
                 student_id=student_id,
                 learning_report=learning_report,
-                journal=image_url
+                journal=image_url,
+                journal_topic=journal_topic,
             )
         except Exception as e:
             raise e
-    

@@ -51,9 +51,10 @@ class LLMClass:
         You will receive:
         - A new journal entry from a child
         - The previous learning report (or None)
+        - A journal topic to guide your evaluation
 
         Your tasks:
-        1. Score the journal in each of the 13 categories (1–5 scale)
+        1. Score the journal in each of the 13 categories (1–5 scale) based on the journal topic provided
         2. Provide the average overall score (1 decimal)
         3. Compare the new journal to the previous report and describe improvements or regressions
         4. Write a donor-friendly summary of this submission
@@ -72,7 +73,7 @@ class LLMClass:
         """.strip()
 
     def get_updated_learning_report(
-        self, new_journal: str, previous_report: Optional[dict] = None
+        self, new_journal: str, previous_report: Optional[dict] = None, journal_topic: str = ""
     ) -> dict:
         prompt = self.build_prompt(new_journal, previous_report)
 

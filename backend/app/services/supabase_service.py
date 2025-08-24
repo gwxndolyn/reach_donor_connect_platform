@@ -95,7 +95,7 @@ class DBServiceClass:
         return donor_id
 
     def notify_donor_of_new_report(
-        self, donor_id: str, student_id: str, learning_report: dict, journal: str
+        self, donor_id: str, student_id: str, learning_report: dict, journal: str, journal_topic: str
     ):
         try:
             data = {
@@ -103,6 +103,8 @@ class DBServiceClass:
                 "student_id": student_id,
                 "learning_report": learning_report,
                 "journal_image": journal,
+                "journal_topic": journal_topic,
+                "is_read": False,
             }
             res = supabase.table("notifications").insert(data).execute()
             return res
