@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Trophy, MapPin, Users, TrendingUp } from "lucide-react";
 import { ColorBasedMap } from "@/components/ColorBasedMap";
 import { createClient } from "@/utils/supabase/server";
+import Image from "next/image";
 
 const regionDisplayMap: Record<string, string> = {
   islands: "Islands 離島",
@@ -109,7 +110,11 @@ export default async function LeaderboardPage() {
   const myRegion = DonorData.region as string;
 
   // ---- RPC: Top Donors in My Region ----
-  type TopNameRow = { name: string | null; anonymous: boolean | null };
+  type TopNameRow = {
+    name: string | null;
+    anonymous: boolean | null;
+    avatar_id: string | null;
+  };
 
   const { data: topDonorsInMyRegion, error: donorsInRegionError } =
     (await supabase.rpc("get_top_donors_in_region", {
@@ -132,6 +137,7 @@ export default async function LeaderboardPage() {
     name: string | null;
     anonymous: boolean | null;
     number_of_referrals: number | null;
+    avatar_id: string | null;
   };
 
   const { data: topReferrersInMyRegion, error: referrersInRegionError } =
@@ -339,15 +345,33 @@ export default async function LeaderboardPage() {
                       return (
                         <div
                           key={idx}
-                          className="flex items-center bg-white/60 backdrop-blur rounded-xl p-4 border border-yellow-200/50"
+                          className="flex items-center bg-white/60 backdrop-blur rounded-xl p-2 border border-yellow-200/50"
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-yellow-800 bg-yellow-300">
+                          <div className="flex items-center gap-3 w-full">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-red-800 bg-red-300">
                               {idx + 1}
                             </div>
                             <span className="font-semibold text-gray-900">
                               {displayName}
                             </span>
+
+                            {!row.anonymous ? (
+                              <Image
+                                src={`https://models.readyplayer.me/68aa9c2278a54f62ce7e9d95.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                alt={displayName}
+                                width={64}
+                                height={64}
+                                className="w-12 h-12 rounded-full ml-auto"
+                              />
+                            ) : (
+                              <Image
+                                src={`/placeholder_avatar.jpg`}
+                                alt={displayName}
+                                width={32}
+                                height={32}
+                                className="w-12 h-12 rounded-full ml-auto"
+                              />
+                            )}
                           </div>
                         </div>
                       );
@@ -379,15 +403,33 @@ export default async function LeaderboardPage() {
                       return (
                         <div
                           key={idx}
-                          className="flex items-center bg-white/60 backdrop-blur rounded-xl p-4 border border-red-200/50"
+                          className="flex items-center bg-white/60 backdrop-blur rounded-xl p-2 border border-red-200/50"
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 w-full">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-red-800 bg-red-300">
                               {idx + 1}
                             </div>
                             <span className="font-semibold text-gray-900">
                               {displayName}
                             </span>
+
+                            {!row.anonymous ? (
+                              <Image
+                                src={`https://models.readyplayer.me/68aa9c2278a54f62ce7e9d95.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                alt={displayName}
+                                width={64}
+                                height={64}
+                                className="w-12 h-12 rounded-full ml-auto"
+                              />
+                            ) : (
+                              <Image
+                                src={`/placeholder_avatar.jpg`}
+                                alt={displayName}
+                                width={32}
+                                height={32}
+                                className="w-12 h-12 rounded-full ml-auto"
+                              />
+                            )}
                           </div>
                         </div>
                       );

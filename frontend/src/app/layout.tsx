@@ -33,11 +33,6 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   const headersList = await headers();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
   // Pages where navbar should NOT be shown
