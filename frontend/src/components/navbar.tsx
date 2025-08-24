@@ -138,12 +138,8 @@ export function NavigationMenuDemo() {
           {/* User Profile Menu and Theme Toggle */}
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            <div
-              className="relative"
-              onMouseLeave={() => setDropdownOpen(false)}
-            >
+            <div className="relative">
               <button
-                onMouseEnter={() => setDropdownOpen(true)}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full px-3 py-2 transition-all"
               >
