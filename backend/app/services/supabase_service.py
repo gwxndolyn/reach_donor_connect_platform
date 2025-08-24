@@ -5,8 +5,10 @@ import random
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+
 def get_supabase_client():
     return supabase
+
 
 class DBServiceClass:
     def test_connection():
@@ -97,15 +99,23 @@ class DBServiceClass:
     ):
         try:
             data = {
-            "donor_id": donor_id,
-            "student_id": student_id,
-            "learning_report": learning_report,
-            "journal_image": journal,
+                "donor_id": donor_id,
+                "student_id": student_id,
+                "learning_report": learning_report,
+                "journal_image": journal,
             }
-            res = (supabase.table("notifications").insert(
-                data
-            )
-            .execute())
+            res = supabase.table("notifications").insert(data).execute()
             return res
         except Exception as e:
             return {"error": str(e)}
+
+    def get_all_notifications(self, donor_id: str, student_id: str):
+        res = (
+            supabase.table("notifications")
+            .select("*")
+            .eq("student_id", student_id)
+            .eq("donor_id", donor_id)
+            .execute()
+        )
+        print(res.data)
+        return res.data
