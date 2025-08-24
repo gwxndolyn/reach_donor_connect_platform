@@ -49,12 +49,12 @@ export function NavigationMenuDemo() {
   if (loading) {
     return (
       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-4">
-        <div 
+        <div
           className="border border-white/30 dark:border-gray-600/30 rounded-2xl shadow-2xl px-6 py-4"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
           }}
         >
           <div className="flex items-center justify-between">
@@ -70,12 +70,12 @@ export function NavigationMenuDemo() {
   if (!user) {
     return (
       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-4">
-        <div 
+        <div
           className="border border-white/30 dark:border-gray-600/30 rounded-2xl shadow-2xl px-6 py-4"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
           }}
         >
           <div className="flex items-center justify-between">
@@ -84,14 +84,14 @@ export function NavigationMenuDemo() {
             </Link>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors"
               >
                 Sign In
               </Link>
-              <Link 
-                href="/signup" 
+              <Link
+                href="/signup"
                 className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-full font-medium hover:from-red-600 hover:to-pink-700 transition-all"
               >
                 Get Started
@@ -115,20 +115,20 @@ export function NavigationMenuDemo() {
 
           {/* Center Navigation */}
           <nav className="flex items-center space-x-8">
-            <Link 
-              href="/donations" 
+            <Link
+              href="/donations"
               className="text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
             >
               Donations
             </Link>
-            <Link 
-              href="/home/inbox" 
+            <Link
+              href="/home/inbox"
               className="text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
             >
               Inbox
             </Link>
-            <Link 
-              href="/leaderboard" 
+            <Link
+              href="/leaderboard"
               className="text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
             >
               Leaderboard
@@ -138,7 +138,10 @@ export function NavigationMenuDemo() {
           {/* User Profile Menu and Theme Toggle */}
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            <div className="relative" onMouseLeave={() => setDropdownOpen(false)}>
+            <div
+              className="relative"
+              onMouseLeave={() => setDropdownOpen(false)}
+            >
               <button
                 onMouseEnter={() => setDropdownOpen(true)}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -148,17 +151,22 @@ export function NavigationMenuDemo() {
                   <User className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  {user.email?.split('@')[0] || 'My Account'}
+                  {"Account"}
                 </span>
-                <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
                   <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{user.email?.split('@')[0] || 'User'}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {user.email}
+                    </p>
                   </div>
                   <div className="py-2">
                     <Link
