@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, Users, TrendingUp, Shield, ArrowRight, Star } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 export default function LandingPage() {
   return (
@@ -8,13 +9,7 @@ export default function LandingPage() {
       {/* Header with Logo */}
       <header className="absolute top-0 left-0 right-0 z-10 px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <Image
-            src="/logo.png"
-            alt="DonorConnect"
-            width={120}
-            height={40}
-            className="h-8 w-auto opacity-90"
-          />
+          <Logo className="h-8 w-auto opacity-90" />
         </div>
       </header>
 

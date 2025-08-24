@@ -8,6 +8,7 @@ import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/ui/logo";
 
 import {
   NavigationMenu,
@@ -79,13 +80,7 @@ export function NavigationMenuDemo() {
         >
           <div className="flex items-center justify-between">
             <Link href="/" className="hover:opacity-80 transition-opacity">
-              <Image
-                src="/logo.png"
-                alt="DonorConnect"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
-              />
+              <Logo />
             </Link>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
@@ -115,13 +110,7 @@ export function NavigationMenuDemo() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/home" className="hover:opacity-80 transition-opacity">
-            <Image
-              src="/logo.png"
-              alt="DonorConnect"
-              width={120}
-              height={40}
-              className="h-8 w-auto"
-            />
+            <Logo />
           </Link>
 
           {/* Center Navigation */}
