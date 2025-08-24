@@ -8,6 +8,7 @@ import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/ui/logo";
 
 import {
   NavigationMenu,
@@ -22,13 +23,7 @@ import {
 function Brand() {
   return (
     <div className="flex items-center">
-      <Image
-        src="/logo.png"
-        alt="DonorConnect"
-        width={120}
-        height={40}
-        className="h-10 w-auto"
-      />
+      <Logo width={120} height={40} className="h-10 w-auto" />
     </div>
   );
 }
