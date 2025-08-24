@@ -35,6 +35,8 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
+  // Pages where navbar should NOT be shown
+
   const publicPages = ["/", "/login", "/signup", "/error"];
   const shouldHideNavbar =
     publicPages.includes(pathname) || pathname.startsWith("/signup/");
@@ -64,13 +66,15 @@ export default async function RootLayout({
               <div className="container mx-auto px-4">
                 <NavigationMenuDemo />
               </div>
-            </nav>)}
+            </nav>
+          )}
           {showNavbar && isStaff && (
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
               <div className="container mx-auto px-4">
                 <StaffNavbar />
               </div>
-            </nav>)}
+            </nav>
+          )}
 
           <main>{children}</main>
         </ThemeProvider>
