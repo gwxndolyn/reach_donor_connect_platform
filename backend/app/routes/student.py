@@ -22,6 +22,6 @@ async def submit_journal(payload: JournalSubmission):
     notifier.notify_donor_of_new_report(
         student_id=payload.student_id,
         learning_report=resp_dict,
-        journal=payload.journal,
+        image_url=payload.image_url,
     )
     return {"message": "Journal submitted and report generated.", "report": report}

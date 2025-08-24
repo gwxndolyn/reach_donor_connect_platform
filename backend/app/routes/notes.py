@@ -30,7 +30,8 @@ async def upload_note(request: NoteUploadRequest):
 
         submission_payload = JournalSubmission(
             student_id = request.student_id,
-            journal = extracted_text
+            journal = extracted_text,
+            image_url = request.file_url
         )
 
         submission_result = await submit_journal(submission_payload)

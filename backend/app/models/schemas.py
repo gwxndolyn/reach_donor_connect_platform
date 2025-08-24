@@ -5,6 +5,7 @@ from typing import List, Dict
 class JournalSubmission(BaseModel):
     student_id: str
     journal: str
+    image_url: str
 
 
 class LearningReportResponse(BaseModel):
