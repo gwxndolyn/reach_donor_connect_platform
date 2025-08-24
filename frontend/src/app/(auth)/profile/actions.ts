@@ -9,6 +9,7 @@ type DonorRow = {
   email?: string | null;
   region?: string | null;
   anonymous?: boolean | null;
+  avatar_id?: string | null;
 };
 
 export async function loadDonor() {
@@ -26,7 +27,7 @@ export async function loadDonor() {
 
   const { data, error } = await supabase
     .from("donors")
-    .select("name,email,region,anonymous")
+    .select("name,email,region,anonymous,avatar_id")
     .eq("auth_uid", user.id)
     .single();
 
@@ -41,6 +42,7 @@ export async function loadDonor() {
     email: data?.email ?? user.email ?? "",
     region: data?.region ?? null,
     anonymous: !!data?.anonymous,
+    avatar_id: data?.avatar_id ?? null,
   };
 
   return { uid: user.id, donor };

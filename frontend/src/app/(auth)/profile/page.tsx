@@ -1,121 +1,155 @@
 import Link from "next/link";
-import { ChevronRight, Shield } from "lucide-react";
-import { loadDonor, setAnonymous } from "./actions";
+import Image from "next/image";
+import {
+  User,
+  SlidersHorizontal,
+  LogOut,
+  Shield,
+  ChevronRight,
+} from "lucide-react";
+// import your server action:
+import { loadDonor, setAnonymous /*, signOut*/ } from "./actions";
 
 export default async function ProfilePage() {
-  const { donor } = await loadDonor();
+  const donor = (await loadDonor()).donor;
+  const isDarkMode =
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false;
+
+  const avatarUrl = donor?.avatar_id
+    ? `https://models.readyplayer.me/${
+        donor.avatar_id
+      }.png?expression=happy&pose=thumbs-up&size=256${
+        isDarkMode ? "&background=158,158,158" : ""
+      }`
+    : "/placeholder_avatar.jpg";
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center mx-auto p-6 space-y-8 bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header */}
-      <header className="flex w-[60%] items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            Your Profile
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Manage your settings and personalization.
-          </p>
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      {/* Top header band */}
+      <div className="h-40 bg-violet-300 dark:bg-violet-400/30 rounded-b-3xl" />
+
+      <main className="mx-auto w-full max-w-md px-6">
+        {/* Avatar overlapping the header */}
+        <div className="-mt-12 flex justify-center">
+          <Image
+            src={avatarUrl}
+            alt={donor?.name ?? "Avatar"}
+            width={128}
+            height={128}
+            className="rounded-full ring-4 ring-white dark:ring-gray-900 shadow-md bg-white object-cover"
+          />
         </div>
 
-        <Link
-          href="/profile/customize-avatar"
-          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-white font-medium shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          Customize Avatar
-          <ChevronRight className="h-5 w-5" />
-        </Link>
-      </header>
+        {/* Name */}
+        <h1 className="mt-4 text-center text-2xl font-semibold text-gray-900 dark:text-white">
+          {donor?.name ?? "—"}
+        </h1>
 
-      {/* Profile card */}
-      <section className="rounded-2xl border border-gray-200 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-white/30 dark:border-gray-700/30 hover:shadow-2xl transition-all duration-300 hover:scale-105">
-        <div className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-indigo-100 grid place-items-center">
-              <span className="text-indigo-700 font-semibold">
-                {String(donor.name ?? "U")
-                  .slice(0, 1)
-                  .toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-gray-900 dark:text-white">
-                {donor.name || "—"}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                {donor.email || "—"}
-              </div>
-              {donor.region && (
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Region: {donor.region}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="h-px bg-gray-100" />
-
-        {/* Settings row: Anonymous mode */}
-        <div className="p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-amber-100 grid place-items-center">
-                <Shield className="h-5 w-5 text-amber-700" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900 dark:text-white">
-                  Anonymous mode
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Hide your name on public leaderboards and messages.
-                </div>
-              </div>
-            </div>
-
-            {/* Segmented toggle using server actions (no client JS needed) */}
-            <div className="flex items-center gap-2">
-              <form action={setAnonymous}>
-                <input type="hidden" name="anonymous" value="false" />
-                <button
-                  type="submit"
-                  className={[
-                    "px-3 py-1.5 rounded-lg text-sm font-medium border",
-                    donor.anonymous
-                      ? "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                      : "bg-emerald-600 text-white border-emerald-600",
-                  ].join(" ")}
-                >
-                  Show name
-                </button>
-              </form>
-
-              <form action={setAnonymous}>
-                <input type="hidden" name="anonymous" value="true" />
-                <button
-                  type="submit"
-                  className={[
-                    "px-3 py-1.5 rounded-lg text-sm font-medium border",
-                    donor.anonymous
-                      ? "bg-emerald-600 text-white border-emerald-600"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50",
-                  ].join(" ")}
-                >
-                  Anonymous
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <div className="mt-3 min-h-[1.25rem]">
-            <span className="text-sm text-gray-500">
-              {donor.anonymous
-                ? "Currently, your profile is anonymous."
-                : "Currently, your profile is public. Your name may appear publicly."}
+        {/* Contact rows */}
+        <div className="mt-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Mail</span>
+            <span className="text-base text-gray-900 dark:text-white">
+              {donor?.email ?? "—"}
             </span>
           </div>
         </div>
-      </section>
+
+        <hr className="my-6 border-gray-200 dark:border-gray-800" />
+
+        {/* Settings list */}
+        <ul className="divide-y divide-gray-200 dark:divide-gray-800 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-900/60 shadow">
+          {/* Anonymous mode toggle (server action) */}
+          <li className="flex items-center justify-between px-4 py-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-full bg-amber-100 grid place-items-center">
+                <Shield className="h-5 w-5 text-amber-700" />
+              </div>
+              <span className="text-gray-900 dark:text-white">
+                Anonymous mode
+              </span>
+            </div>
+
+            {/* Single-button toggle that posts to the server action */}
+            <form action={setAnonymous}>
+              <input
+                type="hidden"
+                name="anonymous"
+                value={(!donor?.anonymous).toString()}
+              />
+              <button
+                type="submit"
+                aria-label="Toggle anonymous mode"
+                className={[
+                  "relative inline-flex h-7 w-12 items-center rounded-full transition",
+                  donor?.anonymous ? "bg-emerald-500" : "bg-gray-300",
+                ].join(" ")}
+              >
+                <span
+                  className={[
+                    "inline-block h-5 w-5 transform rounded-full bg-white shadow transition",
+                    donor?.anonymous ? "translate-x-6" : "translate-x-1",
+                  ].join(" ")}
+                />
+              </button>
+            </form>
+          </li>
+
+          {/* Profile details */}
+          <li>
+            <Link
+              href="/profile/details"
+              className="flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-800 grid place-items-center">
+                  <User className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </div>
+                <span className="text-gray-900 dark:text-white">
+                  Profile details
+                </span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+            </Link>
+          </li>
+
+          {/* Settings */}
+          <li>
+            <Link
+              href="/settings"
+              className="flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-800 grid place-items-center">
+                  <SlidersHorizontal className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </div>
+                <span className="text-gray-900 dark:text-white">Settings</span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+            </Link>
+          </li>
+
+          {/* Log out (hook up to your signOut action if you have one) */}
+          <li>
+            {/* <form action={signOut}> */}
+            <button
+              // type="submit"
+              className="w-full flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-800 grid place-items-center">
+                  <LogOut className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </div>
+                <span className="text-gray-900 dark:text-white">Log out</span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+            </button>
+            {/* </form> */}
+          </li>
+        </ul>
+      </main>
     </div>
   );
 }

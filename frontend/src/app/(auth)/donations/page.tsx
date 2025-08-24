@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, DollarSign, Calendar, MapPin, ArrowRight, Plus, TrendingUp } from "lucide-react";
+import {
+  Heart,
+  DollarSign,
+  Calendar,
+  MapPin,
+  ArrowRight,
+  Plus,
+  TrendingUp,
+} from "lucide-react";
 
 import { createClient } from "@/utils/supabase/server";
 
@@ -26,7 +34,8 @@ export default async function DonationsPage() {
     if (DonorData?.id) {
       const { data: donationsData } = await supabase
         .from("donations")
-        .select(`
+        .select(
+          `
           *,
           children (
             name,
@@ -34,7 +43,8 @@ export default async function DonationsPage() {
             location,
             profile_image_url
           )
-        `)
+        `
+        )
         .eq("donor_id", DonorData.id)
         .order("created_at", { ascending: false });
       donations = donationsData;
@@ -45,64 +55,72 @@ export default async function DonationsPage() {
   }
 
   // Calculate total donations
-  const totalDonated = donations?.reduce((sum, donation) => sum + donation.amount, 0) || 0;
-  const monthlyTotal = donations?.filter(donation => {
-    const donationDate = new Date(donation.created_at);
-    const currentDate = new Date();
-    return donationDate.getMonth() === currentDate.getMonth() && 
-           donationDate.getFullYear() === currentDate.getFullYear();
-  }).reduce((sum, donation) => sum + donation.amount, 0) || 0;
+  const totalDonated =
+    donations?.reduce((sum, donation) => sum + donation.amount, 0) || 0;
+  const monthlyTotal =
+    donations
+      ?.filter((donation) => {
+        const donationDate = new Date(donation.created_at);
+        const currentDate = new Date();
+        return (
+          donationDate.getMonth() === currentDate.getMonth() &&
+          donationDate.getFullYear() === currentDate.getFullYear()
+        );
+      })
+      .reduce((sum, donation) => sum + donation.amount, 0) || 0;
 
-  const userName = DonorData?.name || 
-                   AuthData.user.user_metadata?.first_name || 
-                   AuthData.user.email?.split('@')[0] || 
-                   'User';
+  const userName =
+    DonorData?.name ||
+    AuthData.user.user_metadata?.first_name ||
+    AuthData.user.email?.split("@")[0] ||
+    "User";
 
   // Mock data for demonstration (in case database is empty)
   const mockDonations = [
     {
       id: 1,
       amount: 50,
-      created_at: "2024-01-15T10:00:00Z",
+      created_at: "2025-08-01T10:00:00Z",
       donation_type: "monthly",
       status: "completed",
       children: {
-        name: "Maria Santos",
+        name: "Carrie Lee",
         age: 8,
-        location: "Philippines",
-        profile_image_url: "/image1.webp"
-      }
+        location: "Kowloon City 九龍城",
+        profile_image_url: "/image1.webp",
+      },
     },
     {
       id: 2,
-      amount: 25,
-      created_at: "2024-01-10T15:30:00Z",
+      amount: 450,
+      created_at: "2025-06-10T15:30:00Z",
       donation_type: "one_time",
       status: "completed",
       children: {
         name: "Alex Chen",
         age: 12,
-        location: "Cambodia",
-        profile_image_url: "/image1.webp"
-      }
+        location: "Sai Kung 西貢",
+        profile_image_url: "/image1.webp",
+      },
     },
     {
       id: 3,
-      amount: 100,
-      created_at: "2024-01-01T09:00:00Z",
+      amount: 200,
+      created_at: "2025-05-24T09:00:00Z",
       donation_type: "one_time",
       status: "completed",
       children: {
-        name: "Sofia Rodriguez",
+        name: "Ko Wah-Man",
         age: 10,
-        location: "Guatemala",
-        profile_image_url: "/image1.webp"
-      }
-    }
+        location: "Sham Shui Po 深水埗",
+        profile_image_url: "/image1.webp",
+      },
+    },
   ];
 
-  const displayDonations = donations && donations.length > 0 ? donations : mockDonations;
-  const displayTotal = donations && donations.length > 0 ? totalDonated : 175;
+  const displayDonations =
+    donations && donations.length > 0 ? donations : mockDonations;
+  const displayTotal = donations && donations.length > 0 ? totalDonated : 1250;
   const displayMonthly = donations && donations.length > 0 ? monthlyTotal : 50;
 
   return (
@@ -110,8 +128,12 @@ export default async function DonationsPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 pt-20">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 pt-20">My Donations</h1>
-          <p className="text-gray-600 dark:text-gray-300">Track your giving history and impact</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 pt-20">
+            My Donations
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            Track your giving history and impact
+          </p>
         </div>
 
         {/* Stats Cards */}
@@ -121,10 +143,16 @@ export default async function DonationsPage() {
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
                 <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">All time</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                All time
+              </span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">${displayTotal}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Total donated</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              ${displayTotal}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Total donated
+            </p>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -132,10 +160,16 @@ export default async function DonationsPage() {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
                 <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">This month</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                This month
+              </span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">${displayMonthly}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Monthly total</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              ${displayMonthly}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Monthly total
+            </p>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -143,10 +177,16 @@ export default async function DonationsPage() {
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
                 <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">Impact</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Impact
+              </span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{displayDonations.length}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Children supported</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              {displayDonations.length}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Children supported
+            </p>
           </div>
         </div>
 
@@ -164,37 +204,48 @@ export default async function DonationsPage() {
         {/* Donations History */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
           <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Donation History</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Donation History
+            </h2>
           </div>
-          
+
           <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {displayDonations.map((donation, index) => (
-              <div key={donation.id || index} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <div
+                key={donation.id || index}
+                className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     {/* Child Photo */}
                     <div className="relative">
                       <Image
-                        src={donation.children?.profile_image_url || "/image1.webp"}
+                        src={
+                          donation.children?.profile_image_url || "/image1.webp"
+                        }
                         alt={donation.children?.name || "Child"}
                         width={60}
                         height={60}
                         className="rounded-full object-cover"
                       />
                     </div>
-                    
+
                     {/* Donation Details */}
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           ${donation.amount} donation
                         </h3>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          donation.donation_type === 'monthly' 
-                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
-                            : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                        }`}>
-                          {donation.donation_type === 'monthly' ? 'Monthly' : 'One-time'}
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${
+                            donation.donation_type === "monthly"
+                              ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                              : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                          }`}
+                        >
+                          {donation.donation_type === "monthly"
+                            ? "Monthly"
+                            : "One-time"}
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
@@ -210,17 +261,19 @@ export default async function DonationsPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Status */}
                   <div className="text-right">
-                    <span className={`px-3 py-1 text-sm rounded-full ${
-                      donation.status === 'completed' 
-                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' 
-                        : donation.status === 'pending'
-                        ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    }`}>
-                      {donation.status || 'completed'}
+                    <span
+                      className={`px-3 py-1 text-sm rounded-full ${
+                        donation.status === "completed"
+                          ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                          : donation.status === "pending"
+                          ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {donation.status || "completed"}
                     </span>
                   </div>
                 </div>
@@ -231,8 +284,12 @@ export default async function DonationsPage() {
           {displayDonations.length === 0 && (
             <div className="p-12 text-center">
               <Heart className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No donations yet</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">Start making a difference by supporting a child in need</p>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                No donations yet
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Start making a difference by supporting a child in need
+              </p>
               <Link
                 href="/donations/new"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition-colors"

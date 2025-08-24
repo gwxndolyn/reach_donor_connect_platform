@@ -160,6 +160,11 @@ export default async function LeaderboardPage() {
     );
   }
 
+  const isDarkMode =
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -361,7 +366,11 @@ export default async function LeaderboardPage() {
 
                             {!row.anonymous ? (
                               <Image
-                                src={`https://models.readyplayer.me/${row.avatar_id}.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                src={`https://models.readyplayer.me/${
+                                  row.avatar_id
+                                }.png?expression=happy&pose=thumbs-up&quality=100&size=64${
+                                  isDarkMode ? "&background=158,158,158" : ""
+                                }`}
                                 alt={displayName}
                                 width={64}
                                 height={64}
@@ -419,7 +428,11 @@ export default async function LeaderboardPage() {
 
                             {!row.anonymous ? (
                               <Image
-                                src={`https://models.readyplayer.me/${row.avatar_id}.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                src={`https://models.readyplayer.me/${
+                                  row.avatar_id
+                                }.png?expression=happy&pose=thumbs-up&quality=100&size=64${
+                                  isDarkMode ? "&background=158,158,158" : ""
+                                }`}
                                 alt={displayName}
                                 width={64}
                                 height={64}
@@ -429,8 +442,8 @@ export default async function LeaderboardPage() {
                               <Image
                                 src={`/placeholder_avatar.jpg`}
                                 alt={displayName}
-                                width={32}
-                                height={32}
+                                width={64}
+                                height={64}
                                 className="w-12 h-12 rounded-full ml-auto"
                               />
                             )}
