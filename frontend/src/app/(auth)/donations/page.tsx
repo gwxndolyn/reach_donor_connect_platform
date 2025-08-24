@@ -110,7 +110,7 @@ export default async function DonationsPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 pt-20">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Donations</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 pt-20">My Donations</h1>
           <p className="text-gray-600">Track your giving history and impact</p>
         </div>
 
