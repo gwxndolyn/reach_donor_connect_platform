@@ -81,6 +81,7 @@ export default async function PrivatePage() {
 
   return (
     <main className="pt-12 md:pt-14"> {/* 48px then 56px on md */}
+      <div className="w-full bg-white rounded-2xl pt-20">
 
       {/* --- Top 3 Leaderboard Table --- */}
       <div className="w-full bg-white rounded-2xl p-6 shadow-md">
