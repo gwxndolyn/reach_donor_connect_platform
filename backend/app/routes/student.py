@@ -16,12 +16,15 @@ async def submit_journal(payload: JournalSubmission):
     if report is None:
         raise HTTPException(status_code=500, detail="Report generation failed")
     
+    print("Before calling linking service")
     linking_service.ensure_student_donor_link(payload.student_id)
-
+    print("After calling linking service")
+    print("Before calling notifier")
     resp_dict = report.model_dump()
     notifier.notify_donor_of_new_report(
         student_id=payload.student_id,
         learning_report=resp_dict,
         image_url=payload.image_url,
     )
+    print("After calling notifier")
     return {"message": "Journal submitted and report generated.", "report": report}
