@@ -74,7 +74,7 @@ export async function uploadNotes(formData: FormData) {
     if (!fileUrl) return { ok: false, error: "Failed to get file URL." };
 
     // 3️⃣ Call FastAPI backend to extract text
-    const response = await fetch("http://127.0.0.1:8000/notes/upload", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/upload`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
