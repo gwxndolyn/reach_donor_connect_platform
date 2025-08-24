@@ -70,7 +70,7 @@ export default function AvatarAssetPicker({
 
   // Unlock rules: <100 → first 2; >=100 → first 5; >=500 → all
   const unlockedCount = useMemo(() => {
-    if (donationAmount >= 500) return Number.POSITIVE_INFINITY; // unlock all
+    if (donationAmount >= 1500) return Number.POSITIVE_INFINITY; // unlock all
     if (donationAmount >= 100) return 5; // first 5
     return 2; // first 2
   }, [donationAmount]);
@@ -78,7 +78,7 @@ export default function AvatarAssetPicker({
   // Next milestone helper for UI copy & progress bar
   const nextMilestone = useMemo(() => {
     if (donationAmount < 100) return 100;
-    if (donationAmount < 500) return 500;
+    if (donationAmount < 1500) return 1500;
     return null;
   }, [donationAmount]);
 
@@ -330,12 +330,12 @@ export default function AvatarAssetPicker({
               <div
                 className="h-full bg-cyan-400 transition-all"
                 style={{
-                  width: `${Math.min(100, (donationAmount / 500) * 100)}%`,
+                  width: `${Math.min(100, (donationAmount / 1500) * 100)}%`,
                 }}
               />
             </div>
             <div className="text-sm text-gray-600 whitespace-nowrap">
-              {donationAmount >= 500
+              {donationAmount >= 1500
                 ? "All items unlocked"
                 : nextMilestone
                 ? `Donate $${remainingToNext} more to reach $${nextMilestone}`

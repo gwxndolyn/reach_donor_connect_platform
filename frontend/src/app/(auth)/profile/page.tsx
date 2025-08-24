@@ -100,7 +100,7 @@ export default async function ProfilePage() {
           {/* Profile details */}
           <li>
             <Link
-              href="/profile/details"
+              href="/profile/customize-avatar"
               className="flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition"
             >
               <div className="flex items-center gap-3">
@@ -108,24 +108,8 @@ export default async function ProfilePage() {
                   <User className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 </div>
                 <span className="text-gray-900 dark:text-white">
-                  Profile details
+                  Customize Avatar
                 </span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-gray-400" />
-            </Link>
-          </li>
-
-          {/* Settings */}
-          <li>
-            <Link
-              href="/settings"
-              className="flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-800 grid place-items-center">
-                  <SlidersHorizontal className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </div>
-                <span className="text-gray-900 dark:text-white">Settings</span>
               </div>
               <ChevronRight className="h-5 w-5 text-gray-400" />
             </Link>
@@ -140,11 +124,11 @@ export default async function ProfilePage() {
             >
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-800 grid place-items-center">
-                  <LogOut className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  <LogOut className="h-5 w-5 text-red-400" />
                 </div>
-                <span className="text-gray-900 dark:text-white">Log out</span>
+                <span className="text-red-400">Log out</span>
               </div>
-              <ChevronRight className="h-5 w-5 text-gray-400" />
+              <ChevronRight className="h-5 w-5 text-red-400" />
             </button>
             {/* </form> */}
           </li>
