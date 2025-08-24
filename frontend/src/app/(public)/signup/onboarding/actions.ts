@@ -33,11 +33,16 @@ export async function createDonor(formData: FormData) {
   }
 
   const name = (formData.get("name") || "").toString().trim();
+  const gender = (formData.get("gender") || "").toString().trim();
   const region = (formData.get("region") || "")
     .toString()
     .toLowerCase() as Region;
 
   if (!name) return { ok: false, error: "Name is required." };
+  if (!gender) return { ok: false, error: "Gender is required." };
+  if (gender != "male" && gender != "female" && gender != "other") {
+    return { ok: false, error: "Invalid gender." };
+  }
   if (
     ![
       "islands",
@@ -67,20 +72,25 @@ export async function createDonor(formData: FormData) {
 
   const { data: donorData, error: donorError } = await supabase
     .from("donors")
-    .insert([
-      {
-        name,
-        email: userData.user.email,
-        region,
-        onboarded: true,
-        auth_uid: userData.user.id,
-      },
-    ])
-    .select();
+    .upsert(
+      [
+        {
+          name,
+          email: userData.user.email,
+          region,
+          gender,
+          onboarded: true,
+          auth_uid: userData.user.id,
+        },
+      ],
+      { onConflict: "email" }
+    )
+    .select()
+    .single();
 
   if (donorError) return { ok: false, error: donorError.message };
 
-  redirect("/home");
+  redirect("/signup/onboarding/create-avatar");
 
   return { ok: true, donor: donorData };
 }

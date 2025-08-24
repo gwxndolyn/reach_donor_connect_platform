@@ -6,11 +6,11 @@ import {
   fetchAllTemplates,
   saveTokenAndUserIdToDB,
 } from "./actions";
-import TemplateList from "../components/TemplateList";
+import TemplateList from "./components/TemplateList";
 
 type TemplateItem = {
   imageUrl: string;
-  gender: "female" | "male" | "unisex" | string;
+  gender: "female" | "male" | "other";
   usageType: "randomize" | "default" | string;
   id: string;
 };
@@ -34,7 +34,7 @@ export default async function AvatarPage() {
   }
 
   if (DonorData.avatar_id) {
-    return redirect("/avatars/customize");
+    return redirect("/home");
   }
 
   const { token: avatarToken, rpm_user_id: rpmUserId } =

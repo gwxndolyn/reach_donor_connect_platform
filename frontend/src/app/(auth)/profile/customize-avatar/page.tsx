@@ -11,7 +11,7 @@ export default async function CustomizePage() {
 
   const { data: donor, error: donorErr } = await supabase
     .from("donors")
-    .select("rpm_token,onboarded,rpm_user_id,avatar_id, donation_amount")
+    .select("rpm_token,onboarded,rpm_user_id,avatar_id,donation_amount")
     .eq("auth_uid", userData.user.id)
     .single();
 
@@ -19,7 +19,7 @@ export default async function CustomizePage() {
     return redirect("/signup/onboarding");
 
   return (
-    <div className="mt-12">
+    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <AvatarAssetPicker
         token={donor.rpm_token}
         userId={donor.rpm_user_id}

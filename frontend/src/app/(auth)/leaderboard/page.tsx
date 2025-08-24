@@ -54,6 +54,10 @@ export default async function LeaderboardPage() {
     redirect("/signup/onboarding");
   }
 
+  if (DonorData && !DonorData.rpm_onboarded) {
+    redirect("/signup/onboarding/create-avatar");
+  }
+
   // Fetch total donor counts per region using the SQL function (with error handling)
   let regionCountsData = null;
   try {
@@ -117,7 +121,7 @@ export default async function LeaderboardPage() {
   };
 
   const { data: topDonorsInMyRegion, error: donorsInRegionError } =
-    (await supabase.rpc("get_top_donors_in_region", {
+    (await supabase.rpc("get_top_donors_in_region_with_avatar_id", {
       p_region: myRegion,
       p_limit: 3,
     })) as {
@@ -141,7 +145,7 @@ export default async function LeaderboardPage() {
   };
 
   const { data: topReferrersInMyRegion, error: referrersInRegionError } =
-    (await supabase.rpc("get_top_referrers_in_region", {
+    (await supabase.rpc("get_top_referrers_in_region_with_avatar_id", {
       p_region: myRegion,
       p_limit: 3,
     })) as {
@@ -357,7 +361,7 @@ export default async function LeaderboardPage() {
 
                             {!row.anonymous ? (
                               <Image
-                                src={`https://models.readyplayer.me/68aa9c2278a54f62ce7e9d95.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                src={`https://models.readyplayer.me/${row.avatar_id}.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
                                 alt={displayName}
                                 width={64}
                                 height={64}
@@ -415,7 +419,7 @@ export default async function LeaderboardPage() {
 
                             {!row.anonymous ? (
                               <Image
-                                src={`https://models.readyplayer.me/68aa9c2278a54f62ce7e9d95.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
+                                src={`https://models.readyplayer.me/${row.avatar_id}.png?expression=happy&pose=thumbs-up&quality=100&size=64`}
                                 alt={displayName}
                                 width={64}
                                 height={64}
