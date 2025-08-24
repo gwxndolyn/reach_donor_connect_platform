@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Mail, Lock, AlertCircle, CheckCircle, UserCheck } from "lucide-react";
 import { staffLogin, staffSignup } from "./actions";
+import { Logo } from "@/components/ui/logo";
 
 export default function StaffAuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,9 +23,7 @@ export default function StaffAuthPage() {
             {/* Logo */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center mb-4">
-                <Image
-                  src="/logo.png"
-                  alt="DonorConnect Staff"
+                <Logo
                   width={160}
                   height={50}
                   className="h-12 w-auto"

@@ -8,6 +8,7 @@ import { logout } from "@/app/(auth)/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/ui/logo";
 
 import {
   NavigationMenu,
@@ -18,6 +19,14 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+
+function Brand() {
+  return (
+    <div className="flex items-center">
+      <Logo width={120} height={40} className="h-10 w-auto" />
+    </div>
+  );
+}
 
 export function StaffNavbar() {
   const [user, setUser] = React.useState<SupabaseUser | null>(null);

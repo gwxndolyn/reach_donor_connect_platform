@@ -73,15 +73,15 @@ export default async function HomePage() {
     {
       type: "donation",
       title: "Monthly donation processed",
-      description: "Your $50 monthly donation to Maria Santos has been processed",
+      description: "Your $50 monthly donation to Emma has been processed",
       time: "2 hours ago",
       icon: Heart,
       color: "text-red-500 bg-red-50 dark:bg-red-900/30"
     },
     {
       type: "update",
-      title: "New photo from Alex",
-      description: "Alex shared a new photo from his school graduation ceremony",
+      title: "New photo from Anna",
+      description: "Anna shared a new photo from his school graduation ceremony",
       time: "1 day ago",
       icon: Star,
       color: "text-yellow-500 bg-yellow-50 dark:bg-yellow-900/30"
@@ -89,7 +89,7 @@ export default async function HomePage() {
     {
       type: "message",
       title: "Letter received",
-      description: "You received a thank you letter from Sofia Rodriguez",
+      description: "You received a thank you letter from Marcus",
       time: "3 days ago",
       icon: MessageCircle,
       color: "text-blue-500 bg-blue-50 dark:bg-blue-900/30"
@@ -129,26 +129,26 @@ export default async function HomePage() {
 
   const supportedChildren = [
     {
-      name: "Maria Santos",
-      age: 8,
-      location: "Philippines",
-      image: "/image1.webp",
-      progress: "Starting Grade 3 this year",
+      name: "Marcus",
+      age: 7,
+      location: "Sham Shui Po",
+      image: "/image2.webp",
+      progress: "Starting Grade 1 this year",
       totalDonated: "$600"
     },
     {
-      name: "Alex Chen",
-      age: 12,
-      location: "Cambodia",
+      name: "Emma",
+      age: 8,
+      location: "Yau Tsim Mong",
       image: "/image1.webp",
-      progress: "Graduated primary school",
+      progress: "Just completed Grade 2",
       totalDonated: "$450"
     },
     {
-      name: "Sofia Rodriguez",
-      age: 10,
-      location: "Guatemala",
-      image: "/image1.webp",
+      name: "Anna",
+      age: 7,
+      location: "Sai Kung",
+      image: "/image3.webp",
       progress: "Learning to read fluently",
       totalDonated: "$200"
     }
