@@ -12,6 +12,7 @@ linking_service = LinkingServiceClass()
 
 @router.post("/submit")
 async def submit_journal(payload: JournalSubmission):
+    print("Received payload:", payload)
     report = await lr.generate_learning_report(payload.student_id, payload.journal)
     if report is None:
         raise HTTPException(status_code=500, detail="Report generation failed")

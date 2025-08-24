@@ -25,6 +25,7 @@ async def upload_note(request: NoteUploadRequest):
             "image_url": request.file_url,
             "extracted_text": extracted_text,
         }
+        print(payload)
 
         supabase.table("journal_entries").insert(payload).execute()
 

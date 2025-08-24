@@ -119,3 +119,59 @@ class DBServiceClass:
         )
         print(res.data)
         return res.data
+
+    def get_all_children(self, donor_id: str):
+        res = (
+            supabase.table("student_donor_links")
+            .select("student_id")
+            .eq("donor_id", donor_id)
+            .execute()
+        )
+        return res.data
+
+    def get_child_information_by_id(self, student_id: str):
+        res = (
+            supabase.table("students")
+            .select("*")
+            .eq("student_id", student_id)
+            .execute()
+        )
+        if res.data:
+            return res.data[0]
+        return None
+
+    def get_donor_by_supabase_id(self, supabase_id: str):
+        res = (
+            supabase.table("donors").select("id").eq("auth_uid", supabase_id).execute()
+        )
+        if res.data:
+            return res.data
+        return None
+
+    def get_latest_notification(self, donor_id: str, student_id: str):
+        """Get the most recent notification for a donor-student pair"""
+        res = (
+            supabase.table("notifications")
+            .select("*")
+            .eq("donor_id", donor_id)
+            .eq("student_id", student_id)
+            .order("created_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+        if res.data:
+            return res.data[0]
+        return None
+
+    def count_unread_notifications(self, donor_id: str, student_id: str):
+        """Count unread notifications for a donor-student pair"""
+        # For now, return a default count since we don't have an is_read field
+        # You can add an 'is_read' boolean column to notifications table later
+        res = (
+            supabase.table("notifications")
+            .select("*", count="exact")
+            .eq("donor_id", donor_id)
+            .eq("student_id", student_id)
+            .execute()
+        )
+        return res.count or 0
